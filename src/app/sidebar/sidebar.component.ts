@@ -1,0 +1,49 @@
+import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
+import { RouterOutlet } from '@angular/router';
+import { initFlowbite } from 'flowbite';
+import { IconsComponent } from './icons/icons.component';
+
+@Component({
+  selector: 'app-sidebar',
+  standalone: true,
+  imports: [
+    CommonModule,
+    RouterOutlet, 
+    IconsComponent
+  ],
+  templateUrl: './sidebar.component.html',
+  styleUrl: './sidebar.component.scss'
+})
+export class SidebarComponent implements OnInit{
+
+  items = [
+    { icon: 'home', label: 'Home' },
+    { icon: 'trending_up', label: 'Trending' },
+    { icon: 'notifications', label: 'Notifications' },
+    { icon: 'favourites', label:'Favourites'},
+    { icon: 'settings', label: 'Settings' },
+    { icon: 'person', label: 'Profile' },
+  
+  ];
+
+  constructor(@Inject(PLATFORM_ID) private platformId: Object,
+  ){}
+  ngOnInit(): void {
+    if (isPlatformBrowser(this.platformId)) {
+      initFlowbite();
+    }
+
+  }
+
+
+
+
+
+
+
+
+
+
+
+}
