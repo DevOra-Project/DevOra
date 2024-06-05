@@ -1,0 +1,15 @@
+<div class="p-6 bg-gray-800 text-white rounded-lg shadow-md">
+    <h2 class="text-2xl font-semibold mb-4">Crear/Editar Rol</h2>
+    <form (ngSubmit)="onSubmit()">
+      <div class="mb-4">
+        <label class="block text-sm font-medium mb-1" for="roleName">Nombre del Rol</label>
+        <input type="text" id="roleName" [(ngModel)]="role.name" name="roleName" class="w-full p-2 bg-gray-700 rounded">
+      </div>
+      <div class="mb-4">
+        <label class="block text-sm font-medium mb-1" for="permissions">Permisos</label>
+        <input type="text" id="permissions" [(ngModel)]="role.permissions" name="permissions" class="w-full p-2 bg-gray-700 rounded">
+      </div>
+      <button type="submit" class="w-full bg-blue-600 p-2 rounded">Guardar</button>
+    </form>
+  </div>
+  

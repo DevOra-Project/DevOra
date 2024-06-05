@@ -1,9 +1,12 @@
-<div class=" bg-gradient-to-l from-violet-950 to-indigo-950  hidden lg:flex h-screen flex-col justify-between w-48 fixed left-0 top-0 bottom-0 pt-24">
+<div class=" bg-gradient-to-l from-violet-950 to-indigo-950  hidden md:flex h-screen flex-col justify-between w-48 fixed left-0 top-0 bottom-0 pt-24">
   <ul class="space-y-4">
-      <li *ngFor="let item of items" class="flex items-center p-2 hover:bg-zinc-800 rounded-md">
-  
-        <app-icons [icon]="item.icon"></app-icons>
-        <span class="ml-3 text-zinc-400">{{ item.label }}</span>
+      <li *ngFor="let item of items" class="flex items-center p-2 hover:bg-zinc-800 rounded-md" >
+        <div class="w-full flex">
+          <a class="w-full flex" [href]="item.link">
+            <app-icons [icon]="item.icon"></app-icons>
+            <span class="ml-3 text-zinc-400">{{ item.label }}</span>
+          </a>
+        </div>        
       </li>
     </ul>
 

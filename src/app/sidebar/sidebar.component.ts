@@ -1,8 +1,9 @@
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Router, RouterOutlet } from '@angular/router';
 import { initFlowbite } from 'flowbite';
 import { IconsComponent } from './icons/icons.component';
+import { routes } from '../app.routes';
 
 @Component({
   selector: 'app-sidebar',
@@ -10,6 +11,7 @@ import { IconsComponent } from './icons/icons.component';
   imports: [
     CommonModule,
     RouterOutlet, 
+  
     IconsComponent
   ],
   templateUrl: './sidebar.component.html',
@@ -18,12 +20,12 @@ import { IconsComponent } from './icons/icons.component';
 export class SidebarComponent implements OnInit{
 
   items = [
-    { icon: 'home', label: 'Home' },
+    { icon: 'home', label: 'Home', link: '/' },
     { icon: 'trending_up', label: 'Trending' },
     { icon: 'notifications', label: 'Notifications' },
     { icon: 'favourites', label:'Favourites'},
     { icon: 'settings', label: 'Settings' },
-    { icon: 'person', label: 'Profile' },
+    { icon: 'person', label: 'Profile',link: 'profile' },
   
   ];
 

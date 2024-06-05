@@ -4,6 +4,8 @@ import { SidebarComponent } from './sidebar/sidebar.component';
 import { HeaderComponent } from './header/header.component';
 import { isPlatformBrowser } from '@angular/common';
 import { initFlowbite } from 'flowbite';
+import { HttpClientModule } from '@angular/common/http';
+import { BrowserModule } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-root',
@@ -12,6 +14,7 @@ import { initFlowbite } from 'flowbite';
     RouterOutlet,
     SidebarComponent,
     HeaderComponent,
+    HttpClientModule,
 
   ],
   templateUrl: './app.component.html',
