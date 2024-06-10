@@ -21,7 +21,7 @@ export class SidebarComponent implements OnInit{
 
   items = [
     { icon: 'home', label: 'Home', link: '/' },
-    { icon: 'trending_up', label: 'Trending' },
+    { icon: 'trending_up', label: 'Pipelines',link: 'pipeline' },
     { icon: 'notifications', label: 'Notifications' },
     { icon: 'favourites', label:'Favourites'},
     { icon: 'settings', label: 'Settings' },

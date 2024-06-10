@@ -1,0 +1,73 @@
+<div class="container mx-auto p-4">
+    <h1 class="text-2xl font-bold mb-4">Pipeline de Proyecto Angular</h1>
+    <div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-4 gap-4">
+      <div *ngFor="let step of steps" class="p-4 border rounded shadow bg-white flex flex-col justify-between">
+        <div class="mb-4">
+          <h2 class="text-xl font-semibold">{{ step.name }}</h2>
+          <p class="text-gray-700">{{ step.command }}</p>
+        </div>
+        <div class="flex justify-end space-x-2">
+          <button 
+            (click)="checkAndExecuteStep(step)" 
+            class="px-4 py-2 bg-blue-500 text-white rounded w-32">
+            Ejecutar
+          </button>
+          <button 
+            (click)="openConfigModal(step)" 
+            class="px-4 py-2 bg-gray-500 text-white rounded w-32">
+            Configurar
+          </button>
+        </div>
+        <div class="mt-2">
+          <div *ngIf="step.status === 'in-progress'" class="animate-pulse">
+            <div class="h-2 bg-blue-500 rounded"></div>
+          </div>
+          <div *ngIf="step.status === 'completed'" class="bg-green-500 h-2 rounded"></div>
+          <div *ngIf="step.status === 'pending'" class="bg-gray-300 h-2 rounded"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Modal de Configuración -->
+  <dialog id="configModal" class="bg-white p-6 rounded-lg shadow-lg max-w-md mx-auto">
+    <h2 class="text-xl font-semibold mb-4">Configurar Comando</h2>
+    <div class="mb-4">
+      <label class="block text-gray-700 text-sm font-bold mb-2">Nuevo Comando</label>
+      <input 
+        type="text" 
+        [(ngModel)]="newCommand" 
+        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+    </div>
+    <div class="flex justify-end space-x-2">
+      <button 
+        (click)="saveConfig()" 
+        class="px-4 py-2 bg-blue-500 text-white rounded">
+        Guardar
+      </button>
+      <button 
+        (click)="closeModal()" 
+        class="px-4 py-2 bg-gray-500 text-white rounded">
+        Cancelar
+      </button>
+    </div>
+  </dialog>
+  
+  <!-- Modal de Confirmación -->
+  <dialog id="confirmModal" class="bg-white p-6 rounded-lg shadow-lg max-w-md mx-auto">
+    <h2 class="text-xl font-semibold mb-4">Confirmar Ejecución</h2>
+    <p>El pipeline ya ha sido ejecutado. ¿Desea ejecutarlo nuevamente?</p>
+    <div class="flex justify-end space-x-2 mt-4">
+      <button 
+        (click)="confirmExecution()" 
+        class="px-4 py-2 bg-red-500 text-white rounded">
+        Sí
+      </button>
+      <button 
+        (click)="closeConfirmModal()" 
+        class="px-4 py-2 bg-gray-500 text-white rounded">
+        No
+      </button>
+    </div>
+  </dialog>
+  

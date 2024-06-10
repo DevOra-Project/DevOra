@@ -1,0 +1,10 @@
+.file-manager {
+    @apply p-4 bg-gray-100 rounded shadow;
+  }
+  ul {
+    @apply list-disc list-inside;
+  }
+  li {
+    @apply p-2 border-b border-gray-300;
+  }
+  
