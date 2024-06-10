@@ -3,7 +3,7 @@
     "compileOnSave": false,
     "compilerOptions": {
     "baseUrl": "./",
-    "outDir": "./dist",
+    "outDir": "./dist/dev-ora/browser/index.html",
     "sourceMap": true,
     "declaration": false,
     "module": "commonjs",

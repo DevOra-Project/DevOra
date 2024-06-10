@@ -8,6 +8,7 @@ import { LoginComponent } from './login/login.component';
 import { GithubIntegrationComponent } from './github-integration/github-integration.component';
 import { FileManagerComponent } from './file-manager/file-manager.component';
 import { PipelineComponent } from './pipeline/pipeline.component';
+import { NotificationsComponent } from './notifications/notifications.component';
 
 export const routes: Routes = [
     { path: "", component: DashboardComponent },
@@ -19,4 +20,5 @@ export const routes: Routes = [
     { path: "github", component: GithubIntegrationComponent },
     { path: "file-manager", component: FileManagerComponent },
     { path: "pipeline", component: PipelineComponent },
+    { path: "notifications", component: NotificationsComponent },
 ];
