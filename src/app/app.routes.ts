@@ -9,6 +9,7 @@ import { GithubIntegrationComponent } from './github-integration/github-integrat
 import { FileManagerComponent } from './file-manager/file-manager.component';
 import { PipelineComponent } from './pipeline/pipeline.component';
 import { NotificationsComponent } from './notifications/notifications.component';
+import { ProjectsComponent } from './projects/projects.component';
 
 export const routes: Routes = [
     { path: "", component: DashboardComponent },
@@ -21,4 +22,5 @@ export const routes: Routes = [
     { path: "file-manager", component: FileManagerComponent },
     { path: "pipeline", component: PipelineComponent },
     { path: "notifications", component: NotificationsComponent },
+    { path: "projects", component: ProjectsComponent },
 ];
