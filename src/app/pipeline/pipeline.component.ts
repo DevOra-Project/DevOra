@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { ToastrModule, ToastrService } from 'ngx-toastr';
 import { Step } from '../utilities/models/step';
 import { Commentary } from '../utilities/models/commentary';
+import { ElectronService } from 'ngx-electron';
 
 @Component({
   selector: 'app-pipeline',
@@ -18,7 +19,10 @@ import { Commentary } from '../utilities/models/commentary';
   styleUrl: './pipeline.component.scss'
 })
 export class PipelineComponent {
-  constructor(private toastr: ToastrService) {}
+  constructor(
+    private toastr: ToastrService,
+   //private electronService: ElectronService
+  ) {}
   steps: Step[] = [
     { id:1, name: 'Creación del Proyecto', command: 'ng new my-app', status: 'pending',lastRun: new Date() },
     { id:2, name: 'Desarrollo', command: 'ng serve', status: 'pending',lastRun: new Date() },

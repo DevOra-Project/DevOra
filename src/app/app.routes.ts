@@ -6,7 +6,7 @@ import { RoleFormComponent } from './role-form/role-form.component';
 import { UserEditComponent } from './user-edit/user-edit.component';
 import { LoginComponent } from './login/login.component';
 import { GithubIntegrationComponent } from './github-integration/github-integration.component';
-import { FileManagerComponent } from './file-manager/file-manager.component';
+
 import { PipelineComponent } from './pipeline/pipeline.component';
 import { NotificationsComponent } from './notifications/notifications.component';
 import { ProjectsComponent } from './projects/projects.component';
@@ -20,9 +20,9 @@ export const routes: Routes = [
     { path: "edit-user", component: UserEditComponent },
     { path: "login", component: LoginComponent },
     { path: "github", component: GithubIntegrationComponent },
-    { path: "file-manager", component: FileManagerComponent },
+
     { path: "pipeline", component: PipelineComponent },
     { path: "notifications", component: NotificationsComponent },
     { path: "projects", component: ProjectsComponent },
-    { path: "file_explorer", component: FileExplorerComponent },
+    { path: "file-explorer", component: FileExplorerComponent },
 ];
