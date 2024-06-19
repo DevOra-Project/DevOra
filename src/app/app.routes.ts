@@ -10,6 +10,7 @@ import { FileManagerComponent } from './file-manager/file-manager.component';
 import { PipelineComponent } from './pipeline/pipeline.component';
 import { NotificationsComponent } from './notifications/notifications.component';
 import { ProjectsComponent } from './projects/projects.component';
+import { FileExplorerComponent } from './file-explorer/file-explorer.component';
 
 export const routes: Routes = [
     { path: "", component: DashboardComponent },
@@ -23,4 +24,5 @@ export const routes: Routes = [
     { path: "pipeline", component: PipelineComponent },
     { path: "notifications", component: NotificationsComponent },
     { path: "projects", component: ProjectsComponent },
+    { path: "file_explorer", component: FileExplorerComponent },
 ];

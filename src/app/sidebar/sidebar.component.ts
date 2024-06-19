@@ -24,7 +24,7 @@ export class SidebarComponent implements OnInit{
     { icon: 'trending_up', label: 'Pipelines',link: 'pipeline' },
     { icon: 'notifications', label: 'Notifications',link: 'notifications'},
     { icon: 'favourites', label:'Projects',link: 'projects'},
-    { icon: 'settings', label: 'Settings' },
+    { icon: 'settings', label: 'File explorer',link: 'file_explorer'},
     { icon: 'person', label: 'Profile',link: 'profile' },
   
   ];

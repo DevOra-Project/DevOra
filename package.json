@@ -1,12 +1,10 @@
 {
   "name": "dev-ora",
-  
   "main": "main.js",
   "version": "0.0.1",
   "authors": "sc",
   "description": "scapp",
-
-
+  "homepage": "./",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -14,7 +12,7 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "electron": "ng build --base-href ./ && electron .",
-	  "dist": "ng build --base-href ./ && electron-builder"
+    "dist": "ng build --base-href ./ && electron-builder"
   },
   "private": true,
   "dependencies": {
@@ -29,6 +27,7 @@
     "@octokit/rest": "^20.1.1",
     "flowbite": "^2.3.0",
     "fs": "^0.0.1-security",
+    "ngx-electron": "^2.2.0",
     "ngx-toastr": "^19.0.0",
     "path": "^0.12.7",
     "rxjs": "~7.8.0",
@@ -58,6 +57,9 @@
     "mac": {
       "category": "public.app-category.developer-tools"
     },
-    "files": ["**/*", "dist/dev-ora/browser/**"]
+    "files": [
+      "**/*",
+      "dist/dev-ora/browser/**"
+    ]
   }
 }
