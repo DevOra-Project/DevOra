@@ -65,6 +65,14 @@ export class PipelineComponent {
     selectedPipeline: Step | null = null;
     filteredComments: Commentary[] = [];
 
+///Command execution:
+command: string = '';
+output: string = '';
+error: string = '';
+currentDirectory: string = '';
+
+
+
 
   // Funciones para el modal de configuración
   openConfigModal(step: Step) {
@@ -148,6 +156,40 @@ export class PipelineComponent {
     this.filterComments();
     console.log(pipeline)
   }
+
+  ///COMMAND execution functions
+  executeCommand() {
+    if ((<any>window).electronAPI) {
+      (<any>window).electronAPI.executeCommand(this.command)
+        .then((result: any) => {
+          this.output = result.output;
+          this.error = result.error;
+          this.getCurrentDirectory(); // Actualizar el directorio después de ejecutar el comando
+        })
+        .catch((error: any) => {
+          this.error = error.message;
+        });
+    } else {
+      console.error('Electron API not available');
+    }
+  }
+
+  getCurrentDirectory() {
+    if ((<any>window).electronAPI) {
+      (<any>window).electronAPI.getCurrentDirectory()
+        .then((dir: string) => {
+          this.currentDirectory = dir;
+          console.log(this.currentDirectory)
+        })
+        .catch((error: any) => {
+          this.error = error.message;
+        });
+    } else {
+      console.error('Electron API not available');
+    }
+  }
+
+
 }
 
 

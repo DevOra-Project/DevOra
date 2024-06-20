@@ -26,7 +26,7 @@ export class SidebarComponent implements OnInit{
     { icon: 'favourites', label:'Projects',link: 'projects'},
     { icon: 'settings', label: 'File explorer',link: 'file-explorer'},
     { icon: 'person', label: 'Profile',link: 'profile' },
-  
+    { icon: 'clone', label: 'clone', link: 'backup-manager' },
   ];
 
   constructor(@Inject(PLATFORM_ID) private platformId: Object,
@@ -37,15 +37,5 @@ export class SidebarComponent implements OnInit{
     }
 
   }
-
-
-
-
-
-
-
-
-
-
 
 }

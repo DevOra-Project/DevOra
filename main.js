@@ -1,12 +1,14 @@
 const { ipcMain,app, BrowserWindow,dialog} = require('electron')
+const { exec, execSync } = require('child_process');
+
 const url = require('url');
 const path = require('path');
-const fs = require('fs');  // Asegúrate de que fs está importado aquí
-
+//const fs = require('fs');  // Asegúrate de que fs está importado aquí
+const fs = require('fs-extra'); 
 let mainWindow
 function createWindow () {
   mainWindow = new BrowserWindow({
-    width: 1200,
+    width: 1400,
     height: 800,
     webPreferences: {
       nodeIntegration: true,
@@ -73,3 +75,71 @@ ipcMain.handle('read-directory', async (event, dirPath) => {
 ipcMain.handle('read-file', async (event, filePath) => {
   return fs.promises.readFile(filePath, 'utf8');
 });
+
+// Manejar la funcionalidad de clonado
+ipcMain.on('clone-project', (event, projectPath, backupVersion) => {
+  const sourcePath = projectPath;
+  const backupPath = `${sourcePath} ${backupVersion}`;
+
+  fs.copy(sourcePath, backupPath, err => {
+    if (err) {
+      console.error('Error al clonar el proyecto:', err);
+      event.reply('clone-project-response', 'error');
+    } else {
+      console.log('Proyecto clonado exitosamente en:', backupPath);
+      event.reply('clone-project-response', 'success');
+    }
+  });
+});
+
+// Manejar la funcionalidad de rollback
+ipcMain.on('rollback-project', (event, projectPath, backupVersion) => {
+  const backupPath = `${projectPath} ${backupVersion}`;
+
+  fs.copy(backupPath, projectPath, { overwrite: true }, err => {
+    if (err) {
+      console.error('Error al realizar el rollback:', err);
+      event.reply('rollback-project-response', 'error');
+    } else {
+      console.log('Rollback realizado exitosamente desde:', backupPath);
+      event.reply('rollback-project-response', 'success');
+    }
+  });
+});
+
+// Manejar la selección de carpeta
+ipcMain.on('select-folder', async (event) => {
+  const result = await dialog.showOpenDialog(mainWindow, {
+    properties: ['openDirectory']
+  });
+  if (result.canceled) {
+    event.reply('select-folder-response', null);
+  } else {
+    event.reply('select-folder-response', result.filePaths[0]);
+  }
+});
+
+
+ipcMain.handle('get-current-directory', async (event) => {
+  try {
+    const currentDir = execSync('pwd').toString().trim();
+    return currentDir;
+  } catch (error) {
+    return 'Error obtaining current directory';
+  }
+});
+
+
+//eJECUTAR COMANDOS:
+ipcMain.handle('execute-command', async (event, command) => {
+  return new Promise((resolve, reject) => {
+    exec(command, (error, stdout, stderr) => {
+      if (error) {
+        reject({ error: stderr || 'Unknown error' });
+      } else {
+        resolve({ output: stdout, error: stderr });
+      }
+    });
+  });
+});
+

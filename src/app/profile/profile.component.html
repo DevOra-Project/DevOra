@@ -92,6 +92,42 @@
                 </ul>
             </div>
 
+            <!-- organization-commits.component.html -->
+            <div class="container mx-auto p-4">
+                <h1 class="text-2xl font-bold mb-4">Commits de la Organización</h1>
+                <div *ngIf="commits.length > 0; else noCommits">
+                    <ul class="divide-y divide-gray-300">
+                        <li *ngFor="let commit of commits" class="py-2">
+                            <h2 class="text-lg font-semibold">{{ commit.commit.message }}</h2>
+                            <p class="text-sm text-gray-500">Autor: {{ commit.commit.author.name }}</p>
+                            <p class="text-sm text-gray-500">Fecha: {{ commit.commit.author.date }}</p>
+                            <hr class="my-2">
+                        </li>
+                    </ul>
+                </div>
+                <ng-template #noCommits>
+                    <p class="text-gray-400">No hay commits disponibles en este repositorio.</p>
+                </ng-template>
+            </div>
+            <!-- personal-commits.component.html -->
+            <div class="container mx-auto p-4">
+                <h1 class="text-2xl font-bold mb-4">Mis Commits Personales</h1>
+                <div *ngIf="commits.length > 0; else noCommits">
+                    <ul class="divide-y divide-gray-300">
+                        <li *ngFor="let commit of commits" class="py-2">
+                            <h2 class="text-lg font-semibold">{{ commit.commit.message }}</h2>
+                            <p class="text-sm text-gray-500">Repositorio: {{ commit.repository.name }}</p>
+                            <p class="text-sm text-gray-500">Fecha: {{ commit.commit.author.date }}</p>
+                            <hr class="my-2">
+                        </li>
+                    </ul>
+                </div>
+                <ng-template #noCommits>
+                    <p class="text-gray-400">No hay commits disponibles en tus repositorios.</p>
+                </ng-template>
+            </div>
+
+
         </div>
     </div>
 </div>

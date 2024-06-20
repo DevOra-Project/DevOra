@@ -1,15 +1,21 @@
 // src/app/services/github.service.ts
 
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Octokit } from "@octokit/rest";
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class GithubService {
-  private octokit: Octokit;
 
-  constructor() {
+  private octokit: Octokit;
+  
+  private apiUrl = 'https://api.github.com';
+  githubToken: string = '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';
+
+  constructor(private http: HttpClient) {
     this.octokit = new Octokit();
   }
 
@@ -47,4 +53,27 @@ export class GithubService {
       throw error;
     }
   }
+
+ 
+  getCommitsByUser(username: string, repo: string): Observable<any[]> {
+    const url = `${this.apiUrl}/repos/${username}/${repo}/commits`;
+    const headers = new HttpHeaders({
+      //'Authorization': `token ${environment.githubToken}`
+      'Authorization': `token ${this.githubToken}`
+    });
+
+    return this.http.get<any[]>(url, { headers });
+  }
+
+
+  getCommitsByOrg(org: string, repo: string): Observable<any[]> {
+    const url = `${this.apiUrl}/repos/${org}/${repo}/commits`;
+    const headers = new HttpHeaders({
+      'Authorization': `token ${this.githubToken}`
+    });
+
+    return this.http.get<any[]>(url, { headers });
+  }
+
+
 }

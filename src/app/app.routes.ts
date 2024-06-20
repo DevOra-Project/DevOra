@@ -11,6 +11,7 @@ import { PipelineComponent } from './pipeline/pipeline.component';
 import { NotificationsComponent } from './notifications/notifications.component';
 import { ProjectsComponent } from './projects/projects.component';
 import { FileExplorerComponent } from './file-explorer/file-explorer.component';
+import { BackupManagerComponent } from './backup-manager/backup-manager.component';
 
 export const routes: Routes = [
     { path: "", component: DashboardComponent },
@@ -20,9 +21,9 @@ export const routes: Routes = [
     { path: "edit-user", component: UserEditComponent },
     { path: "login", component: LoginComponent },
     { path: "github", component: GithubIntegrationComponent },
-
     { path: "pipeline", component: PipelineComponent },
     { path: "notifications", component: NotificationsComponent },
     { path: "projects", component: ProjectsComponent },
     { path: "file-explorer", component: FileExplorerComponent },
+    { path: "backup-manager", component: BackupManagerComponent },
 ];
