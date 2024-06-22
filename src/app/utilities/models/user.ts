@@ -5,6 +5,9 @@ export class User {
     constructor(
         public id: number,
         public name: string,
+
+        public email: string,
+      
         public profileImage: string,
         public description: string,
         public posts: number,
@@ -13,6 +16,11 @@ export class User {
         public invites: number,
         public events: number,
         public statistics: any,
-        public projectsProgress: ProjectProgress[]
+        public projectsProgress: ProjectProgress[],
+
+        public username?:string,
+        public password?:string,
+        public position?: string,
+
     ) {}
 }

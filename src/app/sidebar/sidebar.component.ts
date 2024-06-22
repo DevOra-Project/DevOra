@@ -23,10 +23,10 @@ export class SidebarComponent implements OnInit{
     { icon: 'home', label: 'Home', link: '/' },
     { icon: 'trending_up', label: 'Pipelines',link: 'pipeline' },
     { icon: 'notifications', label: 'Notifications',link: 'notifications'},
+    { icon: 'clone', label: 'Backup clones', link: 'backup-manager' },
     { icon: 'favourites', label:'Projects',link: 'projects'},
     { icon: 'settings', label: 'File explorer',link: 'file-explorer'},
     { icon: 'person', label: 'Profile',link: 'profile' },
-    { icon: 'clone', label: 'clone', link: 'backup-manager' },
   ];
 
   constructor(@Inject(PLATFORM_ID) private platformId: Object,

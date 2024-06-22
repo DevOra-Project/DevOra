@@ -5,6 +5,11 @@ const url = require('url');
 const path = require('path');
 //const fs = require('fs');  // Asegúrate de que fs está importado aquí
 const fs = require('fs-extra'); 
+const os = require('os');
+
+
+
+
 let mainWindow
 function createWindow () {
   mainWindow = new BrowserWindow({
@@ -143,3 +148,25 @@ ipcMain.handle('execute-command', async (event, command) => {
   });
 });
 
+/* ipcMain.handle('open-terminal', (event, command, directory) => {
+  let terminalCommand;
+
+  if (process.platform === 'win32') {
+    terminalCommand = `start cmd.exe /K "cd /d ${directory} && ${command}"`;
+  } else if (process.platform === 'darwin') {
+    terminalCommand = `open -a Terminal ${directory} && ${command}`;
+  } else {
+    terminalCommand = `x-terminal-emulator -e "cd ${directory} && ${command}"`;
+  }
+
+  exec(terminalCommand, { cwd: directory }, (error, stdout, stderr) => {
+    if (error) {
+      console.error(`Error: ${stderr}`);
+      event.reply('terminal-response', `Error: ${stderr}`);
+    } else {
+      console.log(`Output: ${stdout}`);
+      event.reply('terminal-response', `Output: ${stdout}`);
+    }
+  });
+});
+ */

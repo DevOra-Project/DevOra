@@ -5,8 +5,8 @@ export class ProjectTask  {
       public daysLeft: number,
       public description: string,
       public progress: number,
-      public imageUrl: string,
       public backgroundColor: string,
+      public projectId?: number,
     ) {}
   }
   

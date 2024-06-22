@@ -1,12 +1,12 @@
   <!-- Newsletter -->
-  <div class="p-4 bg-gray-800 rounded shadow">
+<!--   <div class="p-4 bg-gray-800 rounded shadow">
     <h2 class="text-xl font-semibold mb-2">Join the Newsletter</h2>
     <form>
       <input type="email" placeholder="youremail@example.com" class="w-full p-2 bg-gray-700 rounded mb-2">
       <button type="submit" class="w-full bg-blue-600 p-2 rounded">Subscribe</button>
     </form>
   </div>
-
+ -->
 
 <!-- User Profile and OS Work Stats -->
 <div class="space-y-6">
@@ -22,14 +22,19 @@
         <input type="email" id="email" [(ngModel)]="user.email" name="email" class="w-full p-2 bg-gray-700 rounded">
       </div>
       <div class="mb-4">
-        <label class="block text-sm font-medium mb-1" for="role">Rol</label>
-        <select id="role" [(ngModel)]="user.role" name="role" class="w-full p-2 bg-gray-700 rounded">
-          <option *ngFor="let role of roles" [value]="role">{{ role }}</option>
+        <label class="block text-sm font-medium mb-1" for="email">description</label>
+        <input type="description" id="description" [(ngModel)]="user.description" name="description" class="w-full p-2 bg-gray-700 rounded">
+      </div>
+      <div class="mb-4">
+        <label class="block text-sm font-medium mb-1" for="role">Position</label>
+        <select id="role" [(ngModel)]="user.position" name="role" class="w-full p-2 bg-gray-700 rounded">
+          <option  [selected]=" user.position">{{ user.position }}</option>
+          <option *ngFor="let role of positions" [ngValue]="role" [selected]="role === user.position">{{ role }}</option>
         </select>
       </div>
       <div class="mb-4">
         <label class="block text-sm font-medium mb-1" for="commits">Commits</label>
-        <input type="number" id="commits" [(ngModel)]="user.commits" name="commits" class="w-full p-2 bg-gray-700 rounded">
+        <input type="number"disabled  id="commits" [(ngModel)]="user.commits"  name="commits" class="w-full p-2 bg-gray-700 rounded">
       </div>
       <button type="submit" class="w-full bg-blue-600 p-2 rounded">Guardar</button>
     </form>

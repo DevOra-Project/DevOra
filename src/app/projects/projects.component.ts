@@ -3,6 +3,7 @@ import { Project } from '../utilities/models/project';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { LanguageColorService } from '../utilities/services/language-color.service';
+import { ProjectService } from '../utilities/services/project.service';
 
 @Component({
   selector: 'app-proyects',
@@ -26,12 +27,23 @@ export class ProjectsComponent {
     new Project('IOTLandingPage', 'IOTLandingPage', 'CSS'),
     new Project('psychohelp_webapp', 'Forked from PsychoHelp-App-Moviles/psychohelp_webapp', 'TypeScript')
   ];
-  constructor(private languageColorService: LanguageColorService) { }
+
+
+  constructor(private languageColorService: LanguageColorService,
+    private projectService:ProjectService
+
+  ) { }
 
   ngOnInit(): void {
+  /*   this.projectService.getProjects().subscribe(data => {
+      this.projects = data;
+    }); */
+
     this.projects.forEach(project => {
       this.projectColorChange(project)
     });
+
+    
   }
 
   projectColorChange(project:Project){
@@ -52,7 +64,6 @@ export class ProjectsComponent {
         this.projects[index] = { ...this.selectedProject };
       }
     }
-   
     this.closeModal();
   }
 

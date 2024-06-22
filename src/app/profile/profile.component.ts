@@ -6,6 +6,7 @@ import { User } from '../utilities/models/user';
 import { ProjectProgress } from '../utilities/models/project-progress';
 import { FormsModule } from '@angular/forms';
 import { GithubService } from '../utilities/services/github.service';
+import { UserService } from '../utilities/services/user.service';
 
 @Component({
   selector: 'app-profile',
@@ -26,7 +27,8 @@ export class ProfileComponent implements OnInit {
 
   constructor(@Inject(PLATFORM_ID) private platformId: Object, 
     private router: Router,
-    private githubService: GithubService
+    private githubService: GithubService,
+    private userService: UserService
   ) { }
   ngOnInit(): void {
     if (isPlatformBrowser(this.platformId)) {
@@ -36,6 +38,7 @@ export class ProfileComponent implements OnInit {
     this.user = new User(
       1, // ID del usuario
       'JLT',
+      'example@example.com',
       'https://avatars.githubusercontent.com/u/70586674?s=96&v=4',
       'Test Description',
       23,49,24,3,5,
@@ -58,6 +61,12 @@ export class ProfileComponent implements OnInit {
         new ProjectProgress(105, 'Wed 03/07', 27)
       ]
     );
+
+    this.userService.getUser(3).subscribe((us:User)=>{
+      this.user=us;
+    })
+
+
     this.loadRepoCommits();
     this.loadUserCommits();
   }

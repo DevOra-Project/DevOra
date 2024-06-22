@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ToastrModule, ToastrService } from 'ngx-toastr';
 import { Step } from '../utilities/models/step';
@@ -18,11 +18,23 @@ import { ElectronService } from 'ngx-electron';
   templateUrl: './pipeline.component.html',
   styleUrl: './pipeline.component.scss'
 })
-export class PipelineComponent {
+export class PipelineComponent implements OnInit{
   constructor(
     private toastr: ToastrService,
    //private electronService: ElectronService
-  ) {}
+  ) {
+
+    (window as any).electronAPI.onSelectFolderResponse((event: any, folderPath: string) => {
+      if (folderPath) {
+        this.currentDirectory = folderPath;
+        console.log('Carpeta seleccionada:', folderPath);
+        console.log('Carpeta actualizada:', this.currentDirectory);
+      } else {
+        console.error('Selección de carpeta cancelada');
+      }
+    });
+
+  }
   steps: Step[] = [
     { id:1, name: 'Creación del Proyecto', command: 'ng new my-app', status: 'pending',lastRun: new Date() },
     { id:2, name: 'Desarrollo', command: 'ng serve', status: 'pending',lastRun: new Date() },
@@ -30,6 +42,13 @@ export class PipelineComponent {
     { id:4, name: 'Despliegue', command: 'ng deploy', status: 'pending',lastRun: new Date() }
   ];
 
+  // STEP CONFIGURTION
+  stepSettingsModalOpen: boolean = false; // Variable para controlar la apertura del modal
+  stepOnConfig: Step = new Step('', '', '', new Date()); // Step seleccionado para editar (vacío inicialmente)
+
+
+
+  //Comments
   comments: Commentary[] = [
     // Comentarios para el pipeline "Creación del Proyecto"
     { pipelineId: 1, user: 'Alice', message: 'He creado el proyecto inicial utilizando el comando `ng new my-app`. Todo parece estar configurado correctamente.', timestamp: new Date() },
@@ -56,41 +75,45 @@ export class PipelineComponent {
     { pipelineId: 4, user: 'Paula', message: 'Revisé el despliegue y todo se ve bien. Podemos proceder con las próximas características.', timestamp: new Date() },
   ];
   
-
   currentStep: Step | null = null;
   newCommand: string = '';
 
-    //////COmments CONCEPT
-    newComment: string = '';
-    selectedPipeline: Step | null = null;
-    filteredComments: Commentary[] = [];
+  //////COmments CONCEPT
+  newComment: string = '';
+  selectedPipeline: Step | null = null;
+  filteredComments: Commentary[] = [];
 
-///Command execution:
-command: string = '';
-output: string = '';
-error: string = '';
-currentDirectory: string = '';
+  ///Command execution:
+  command: string = '';
+  output: string = '';
+  error: string = '';
+  currentDirectory: string = '';//Probably deprecated
+
+  commandExecuting: boolean = false;
+
+  directory: string = '';
 
 
 
+  ngOnInit(): void {
+    this.getCurrentDirectory(); // Obtener el directorio actual al iniciar la aplicación
+   
+  }
 
   // Funciones para el modal de configuración
-  openConfigModal(step: Step) {
-    this.currentStep = step;
-    this.newCommand = step.command;
-    (document.getElementById('configModal') as HTMLDialogElement).showModal();
+  openModal(step:Step) {
+    this.stepSettingsModalOpen = true; // Abrir el modal
+    this.stepOnConfig = step;
   }
 
   closeModal() {
-    (document.getElementById('configModal') as HTMLDialogElement).close();
+    this.stepSettingsModalOpen = false; // Cerrar el modal
   }
 
-  saveConfig() {
-    if (this.currentStep) {
-      this.currentStep.command = this.newCommand;
-      this.toastr.success('Configuración guardada', 'Éxito');
-    }
-    this.closeModal();
+  saveChanges() {
+    // Aquí implementarías la lógica para guardar los cambios del step seleccionado
+    console.log('Guardando cambios:', this.stepOnConfig);
+    this.closeModal(); // Cerrar el modal después de guardar
   }
 
   // Funciones para el modal de confirmación
@@ -123,6 +146,10 @@ currentDirectory: string = '';
       step.status = 'completed';
       this.toastr.success(`Completado: ${step.command}`, 'Éxito');
     }, 2000); // Simulación de tiempo de ejecución
+    
+    this.command=step.command;
+
+
   }
 
 
@@ -150,6 +177,9 @@ currentDirectory: string = '';
     }
   }
 
+  closeDiscussion(){
+    this.selectedPipeline = null;
+  }
 
   selectPipeline(pipeline: Step) {
     this.selectedPipeline = pipeline;
@@ -158,21 +188,54 @@ currentDirectory: string = '';
   }
 
   ///COMMAND execution functions
-  executeCommand() {
-    if ((<any>window).electronAPI) {
-      (<any>window).electronAPI.executeCommand(this.command)
-        .then((result: any) => {
-          this.output = result.output;
-          this.error = result.error;
-          this.getCurrentDirectory(); // Actualizar el directorio después de ejecutar el comando
+
+ /*  selectDirectory(): void {
+    (window as any).electronAPI.selectfolder().then((dir: string) => {
+      this.currentDirectory = dir; // Actualizar el directorio actual seleccionado
+    }).catch((error: any) => {
+      this.error += 'Error selecting directory: ' + error + '\n';
+    });
+  } */
+    selectDirectory(): void {
+      (window as any).electronAPI.selectFolder();
+      console.log(this.currentDirectory)
+    } 
+ /*  executeCommand(): void {
+    this.output = '';
+    this.error = '';
+
+    if ((window as any).electronAPI && this.currentDirectory) {
+      (window as any).electronAPI.openTerminal(this.command, this.currentDirectory)
+        .then((response: any) => {
+          this.output += response + '\n';
         })
         .catch((error: any) => {
-          this.error = error.message;
+          this.error += 'Error: ' + error + '\n';
         });
     } else {
-      console.error('Electron API not available');
+      this.error += 'Unable to execute command. Current directory not available.\n';
     }
-  }
+  } */
+    executeCommand() {
+      this.commandExecuting = true;
+      if ((<any>window).electronAPI) {
+        (<any>window).electronAPI.executeCommand(this.command)
+          .then((result: any) => {
+            this.output = result.output;
+            this.error = result.error;
+            this.getCurrentDirectory(); // Actualizar el directorio después de ejecutar el comando
+            this.commandExecuting = false; // Marcar como finalizado
+          })
+          .catch((error: any) => {
+            this.error = error.message;
+            this.commandExecuting = false; // Marcar como finalizado
+          });
+      } else {
+        console.error('Electron API not available');
+        this.commandExecuting = false; // Marcar como finalizado en caso de error
+      }
+    }
+
 
   getCurrentDirectory() {
     if ((<any>window).electronAPI) {

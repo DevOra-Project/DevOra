@@ -10,10 +10,13 @@ contextBridge.exposeInMainWorld('electronAPI', {
     selectFolder: () => ipcRenderer.send('select-folder'),
     onCloneProjectResponse: (callback) => ipcRenderer.on('clone-project-response', callback),
     onRollbackProjectResponse: (callback) => ipcRenderer.on('rollback-project-response', callback),
+
     onSelectFolderResponse: (callback) => ipcRenderer.on('select-folder-response', callback),
 
     getCurrentDirectory: () => ipcRenderer.invoke('get-current-directory'),
     //EJECUTRAR COMANDOS:
     executeCommand: (command) => ipcRenderer.invoke('execute-command', command),
-
+   /*  openTerminal: (command) => ipcRenderer.invoke('open-terminal', command),
+    onTerminalResponse: (callback) => ipcRenderer.on('terminal-response', (event, data) => callback(data))
+ */
 });
