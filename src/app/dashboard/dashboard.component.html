@@ -15,7 +15,8 @@
       </div>
       <div class="flex space-x-2">
           <img class="w-6 h-6 rounded-full" [src]="'https://via.placeholder.com/150'" alt="User">
-          <button class="w-6 h-6 rounded-full text-white" [ngClass]="task.backgroundColor +'-600'">+</button>
+          <button class="w-6 h-6 rounded-full text-white" [ngClass]="task.backgroundColor +'-600'">+ </button>
+          <button class=" right-1 w-auto px-1 h-6 rounded-full  bg-purple-300" (click)="redirectToTaskStep(task.id)" >View pipeline </button>
       </div>
   </div>
 </div>

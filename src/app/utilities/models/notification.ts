@@ -1,7 +1,11 @@
 export class Notification {
-    id: number|any;
-    message: string|any;
-    timestamp: Date|any;
-    seen: boolean|any;
-    type:any ;
-  }
+  constructor(
+    public id: number | null,
+    public message: string,
+    public timestamp: Date,
+    public seen: boolean,
+    public type: string,
+    public userID?: number | null,
+    public projectID?: number | null
+  ) {}
+}

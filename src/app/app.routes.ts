@@ -14,7 +14,7 @@ import { FileExplorerComponent } from './file-explorer/file-explorer.component';
 import { BackupManagerComponent } from './backup-manager/backup-manager.component';
 
 export const routes: Routes = [
-    { path: "", component: DashboardComponent },
+  
     { path: "profile", component: ProfileComponent },
     { path: "dashboard", component: DashboardComponent },
     { path: "create-user", component: UserFormComponent },
@@ -26,4 +26,10 @@ export const routes: Routes = [
     { path: "projects", component: ProjectsComponent },
     { path: "file-explorer", component: FileExplorerComponent },
     { path: "backup-manager", component: BackupManagerComponent },
+
+    //PATHS compuestos:
+
+    { path: 'pipeline/:taskId', component: PipelineComponent },
+    { path: 'dashboard/:projectId', component: DashboardComponent },
+    { path: '', redirectTo: '/projects', pathMatch: 'full' }
 ];

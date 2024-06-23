@@ -5,5 +5,6 @@ export class Project {
         public language?: string,
         public languageColor?: string,
         public localPath?: string,
+        public id?: number, 
     ) {}
 }

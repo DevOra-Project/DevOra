@@ -1,5 +1,6 @@
 export class ProjectTask  {
     constructor(
+      public id: number,
       public title: string,
       public date: string,
       public daysLeft: number,

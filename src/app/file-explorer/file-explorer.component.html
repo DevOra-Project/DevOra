@@ -2,10 +2,11 @@
     <h2 class="text-xl font-bold mb-4">File Explorer</h2>
     <div class="flex items-center mb-4">
       <input [(ngModel)]="inputPath" placeholder="Enter directory path" class="border rounded px-4 py-2 mr-2 w-full" />
-      <button (click)="onPathSubmit()" class="bg-blue-500 text-white px-4 py-2 rounded">Read Directory</button>
+      <button (click)="openDirectory()" class="bg-green-600 text-white px-4 py-1 rounded m-2">Open Directory</button>
+      <button (click)="onPathSubmit()" class="bg-blue-500 text-white px-4 py-1 rounded">Read Directory</button>
     </div>
     <div class="flex items-center mb-4">
-      <button (click)="readDirectory('..')" class="bg-blue-500 text-white px-4 py-2 rounded mr-4">Go Up</button>
+      <button (click)="goUpDir()" class="bg-blue-500 text-white px-4 py-2 rounded mr-4">Go Up</button>
       <span class="text-gray-600">{{ currentPath }}</span>
     </div>
     <ul class="list-none p-0">

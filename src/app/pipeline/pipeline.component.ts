@@ -5,6 +5,7 @@ import { ToastrModule, ToastrService } from 'ngx-toastr';
 import { Step } from '../utilities/models/step';
 import { Commentary } from '../utilities/models/commentary';
 import { ElectronService } from 'ngx-electron';
+import { CommentaryService } from '../utilities/services/commentary.service';
 
 @Component({
   selector: 'app-pipeline',
@@ -21,7 +22,7 @@ import { ElectronService } from 'ngx-electron';
 export class PipelineComponent implements OnInit{
   constructor(
     private toastr: ToastrService,
-   //private electronService: ElectronService
+    private commentaryService: CommentaryService
   ) {
 
     (window as any).electronAPI.onSelectFolderResponse((event: any, folderPath: string) => {
@@ -35,12 +36,14 @@ export class PipelineComponent implements OnInit{
     });
 
   }
+
   steps: Step[] = [
     { id:1, name: 'Creación del Proyecto', command: 'ng new my-app', status: 'pending',lastRun: new Date() },
     { id:2, name: 'Desarrollo', command: 'ng serve', status: 'pending',lastRun: new Date() },
-    { id:3, name: 'Producción', command: 'ng build --prod', status: 'pending',lastRun: new Date() },
+    { id:3, name: 'Producción', command: 'ng build', status: 'pending',lastRun: new Date() },
     { id:4, name: 'Despliegue', command: 'ng deploy', status: 'pending',lastRun: new Date() }
   ];
+  stepOnExecution: Step|any;
 
   // STEP CONFIGURTION
   stepSettingsModalOpen: boolean = false; // Variable para controlar la apertura del modal
@@ -97,7 +100,7 @@ export class PipelineComponent implements OnInit{
 
   ngOnInit(): void {
     this.getCurrentDirectory(); // Obtener el directorio actual al iniciar la aplicación
-   
+    
   }
 
   // Funciones para el modal de configuración
@@ -140,13 +143,14 @@ export class PipelineComponent implements OnInit{
 
   // Función para ejecutar el paso del pipeline
   executeStep(step: Step) {
+    this.stepOnExecution= step;
     this.toastr.info(`Ejecutando: ${step.command}`, 'Ejecutando');
     step.status = 'in-progress';
-    setTimeout(() => {
+   /*  setTimeout(() => {
       step.status = 'completed';
       this.toastr.success(`Completado: ${step.command}`, 'Éxito');
     }, 2000); // Simulación de tiempo de ejecución
-    
+     */
     this.command=step.command;
 
 
@@ -155,6 +159,19 @@ export class PipelineComponent implements OnInit{
 
 
   //////////////COMMENTS CONCEPT
+
+  getCommentaries(pipeline: Step): void {
+    this.commentaryService.getCommentariesByStep(+pipeline.id!)
+      .subscribe(
+        (commentaries) => {
+          this.comments = commentaries;
+        },
+        (error) => {
+          console.error('Error fetching commentaries:', error);
+          // Aquí podrías implementar manejo de errores adicional si es necesario
+        }
+      );
+  }
   addComment(pipelineId: number) {
     if (this.newComment.trim()) {
       const newComment: Commentary = {
@@ -184,6 +201,7 @@ export class PipelineComponent implements OnInit{
   selectPipeline(pipeline: Step) {
     this.selectedPipeline = pipeline;
     this.filterComments();
+    //this.getCommentaries(pipeline);
     console.log(pipeline)
   }
 
@@ -225,10 +243,16 @@ export class PipelineComponent implements OnInit{
             this.error = result.error;
             this.getCurrentDirectory(); // Actualizar el directorio después de ejecutar el comando
             this.commandExecuting = false; // Marcar como finalizado
+            this.stepOnExecution.status = 'completed';
+            this.toastr.success(`Completado: ${this.stepOnExecution.command}`, 'Éxito');
           })
           .catch((error: any) => {
             this.error = error.message;
             this.commandExecuting = false; // Marcar como finalizado
+            this.stepOnExecution.status = 'error';
+            this.toastr.success(`Ocurrión un error: ${this.stepOnExecution.command}`, '.');
+
+          
           });
       } else {
         console.error('Electron API not available');

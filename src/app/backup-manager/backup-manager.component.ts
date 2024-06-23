@@ -49,8 +49,8 @@ export class BackupManagerComponent {
   selectFolder() {
     console.log('entra');
     (window as any).electronAPI.selectFolder();
-    console.log('entra');
-   /*  (window as any).electronAPI.onSelectFolderResponse((event: any, folderPath: string) => {
+
+  /*  (window as any).electronAPI.onSelectFolderResponse((event: any, folderPath: string) => {
       if (folderPath) {
         this.projectPath = folderPath;
         console.log('Carpeta seleccionada:', folderPath);

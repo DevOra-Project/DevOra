@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, input } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NgxElectronModule } from 'ngx-electron';
 
@@ -17,34 +17,35 @@ import { NgxElectronModule } from 'ngx-electron';
   styleUrl: './file-explorer.component.scss'
 })
 export class FileExplorerComponent implements OnInit {
-  currentPath: string = '';
   inputPath: string = '';
+  currentPath: string = '';
   filesAndFolders: { name: string, isFile: boolean }[] = [];
   fileContent: string = '';
 
-  constructor() { }
+  constructor(private cdr: ChangeDetectorRef) { 
+    (window as any).electronAPI.onSelectFolderResponse((event: any, folderPath: string) => {
+      if (folderPath) {
+        this.inputPath = folderPath;
+        this.currentPath = folderPath;
+        console.log('Carpeta seleccionada:', folderPath);
+        this.cdr.detectChanges(); // Fuerza la detección de cambios
+        this.readDirectory(this.inputPath)
+      } else {
+        console.error('Selección de carpeta cancelada');
+      }
+    });
+  }
 
   ngOnInit(): void {
     // Inicialmente no leeremos ningún directorio
   }
+  openDirectory(){
+    console.log('entra');
+    (window as any).electronAPI.selectFolder();
+    console.log('entra');
+  }
 
-/*   async readDirectory(dirPath: string) {
-    try {
-      this.currentPath = dirPath;
-      const entries = await (window as any).electronAPI.readDirectory(dirPath);
-      console.log(entries)
-      
-      // Mapea las entradas adecuadamente
-      this.filesAndFolders = entries.map((entry:any) => ({
-        name: entry.name,
-        isFile: entry.isFile ? entry.isFile() : false
-      }));
-    } catch (error) {
-      console.error('Error al leer el directorio:', error);
-      // Manejar el error de acuerdo a tus necesidades
-    }
-  } */
-    async readDirectory(dirPath: string) {
+  async readDirectory(dirPath: string) {
       try {
         this.currentPath = dirPath;
         const entries: { name: string, parentPath: string, path: string }[] = await (window as any).electronAPI.readDirectory(dirPath);
@@ -72,15 +73,28 @@ export class FileExplorerComponent implements OnInit {
 
 
   onEntryClick(entry: { name: string, isFile: boolean }) {
-    const fullPath = `${this.currentPath}/${entry.name}`;
+    const fullPath = this.currentPath+"\\"+entry.name;
+  
     if (entry.isFile) {
       this.readFile(fullPath);
     } else {
       this.readDirectory(fullPath);
+      this.currentPath = fullPath;
+      console.log(this.currentPath)
     }
   }
-
+  goUpDir(): void {
+    const pathParts = this.currentPath.split('\\');
+    if (pathParts.length > 1) {
+      pathParts.pop();
+      this.currentPath = pathParts.join('\\');
+      //this.inputPath = this.currentPath; // Actualiza también el inputPath
+      console.log(this.currentPath)
+      this.readDirectory(this.currentPath); 
+    }
+  }
+  
   onPathSubmit() {
-    this.readDirectory(this.inputPath);
+    this.readDirectory(this.currentPath);
   }
 }

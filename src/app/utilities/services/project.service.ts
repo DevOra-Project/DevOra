@@ -24,7 +24,7 @@ export class ProjectService {
     return this.http.post(`${this.baseUrl}/projects`, project);
   }
 
-  updateProject(id: string, project: any): Observable<any> {
+  updateProject(id: number, project: any): Observable<any> {
     return this.http.put(`${this.baseUrl}/projects/${id}`, project);
   }
 
