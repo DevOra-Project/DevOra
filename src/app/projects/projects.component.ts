@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { Project } from '../utilities/models/project';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -32,8 +32,8 @@ export class ProjectsComponent {
 
   constructor(private languageColorService: LanguageColorService,
     private projectService:ProjectService,
-    private router:Router
-
+    private router:Router,
+    private cdr: ChangeDetectorRef
   ) { }
 
   ngOnInit(): void {
@@ -64,12 +64,19 @@ export class ProjectsComponent {
       console.log(this.selectedProject)
       this.projectService.updateProject(this.selectedProject!.id!,this.selectedProject).subscribe((res:any)=>{
         console.log(res)
+        this.cdr.detectChanges(); // Fuerza la detección de cambios
       })
       const index = this.projects.findIndex(p => p.name === this.selectedProject!.name);
       if (index !== -1) {
         this.projects[index] = { ...this.selectedProject };
       } 
     }
+
+    this.projectService.getProjects().subscribe(data => {
+      this.projects = data;
+    });//Reload forzado, mejorar
+    this.cdr.detectChanges(); 
+    
     this.closeModal();
   
   }

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 @Component({
@@ -18,7 +18,7 @@ export class BackupManagerComponent {
   backupVersion: string = 'Vs.1.0.0';
   showModal: boolean = false;
 
-  constructor() {
+  constructor(private cdr: ChangeDetectorRef) {
     // Escuchar las respuestas del main process
     (window as any).electronAPI.onCloneProjectResponse((event: any, response: string) => {
       if (response === 'success') {
@@ -40,6 +40,7 @@ export class BackupManagerComponent {
       if (folderPath) {
         this.projectPath = folderPath;
         console.log('Carpeta seleccionada:', folderPath);
+        this.cdr.detectChanges(); // Fuerza la detección de cambios
       } else {
         console.error('Selección de carpeta cancelada');
       }
