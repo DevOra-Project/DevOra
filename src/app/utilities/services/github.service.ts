@@ -54,7 +54,6 @@ export class GithubService {
     }
   }
 
- 
   getCommitsByUser(username: string, repo: string): Observable<any[]> {
     const url = `${this.apiUrl}/repos/${username}/${repo}/commits`;
     const headers = new HttpHeaders({
@@ -64,7 +63,6 @@ export class GithubService {
 
     return this.http.get<any[]>(url, { headers });
   }
-
 
   getCommitsByOrg(org: string, repo: string): Observable<any[]> {
     const url = `${this.apiUrl}/repos/${org}/${repo}/commits`;

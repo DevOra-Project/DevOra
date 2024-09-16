@@ -11,7 +11,9 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "electron": "ng build --base-href ./ && electron .",
+    "dev-run": "ng serve --port 4200 &&  electron .",
+    "electron": "ng build --base-href ./ &&  electron .",
+    "electron-build": "ng build && electron .",
     "dist": "ng build --base-href ./ && electron-builder"
   },
   "private": true,
@@ -26,6 +28,7 @@
     "@angular/router": "^17.2.0",
     "@octokit/rest": "^20.1.1",
     "@xterm/addon-fit": "^0.10.0",
+    "electron-packager": "^17.1.2",
     "flowbite": "^2.3.0",
     "fs": "^0.0.1-security",
     "fs-extra": "^11.2.0",
@@ -33,6 +36,7 @@
     "ngx-toastr": "^19.0.0",
     "path": "^0.12.7",
     "rxjs": "~7.8.0",
+    "toastr": "^2.1.4",
     "tslib": "^2.3.0",
     "xterm": "^5.3.0",
     "zone.js": "~0.14.3"

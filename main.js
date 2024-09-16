@@ -22,7 +22,7 @@ function createWindow () {
   })
   mainWindow.loadURL(
     url.format({
-      /*  pathname: path.join(__dirname, `/dist/dev-ora/browser/index.html`),
+  /*      pathname: path.join(__dirname, `/dist/dev-ora/browser/index.html`),
       protocol: "file:",
       slashes: true */
       pathname: 'localhost:4200',

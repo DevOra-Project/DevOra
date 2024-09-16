@@ -6,6 +6,8 @@ import { Step } from '../utilities/models/step';
 import { Commentary } from '../utilities/models/commentary';
 import { ElectronService } from 'ngx-electron';
 import { CommentaryService } from '../utilities/services/commentary.service';
+import { ActivatedRoute } from '@angular/router';
+import { StepService } from '../utilities/services/step.service';
 
 @Component({
   selector: 'app-pipeline',
@@ -22,7 +24,9 @@ import { CommentaryService } from '../utilities/services/commentary.service';
 export class PipelineComponent implements OnInit{
   constructor(
     private toastr: ToastrService,
-    private commentaryService: CommentaryService
+    private route:ActivatedRoute,
+    private commentaryService: CommentaryService,
+    private stepService: StepService 
   ) {
 
     (window as any).electronAPI.onSelectFolderResponse((event: any, folderPath: string) => {
@@ -38,10 +42,10 @@ export class PipelineComponent implements OnInit{
   }
 
   steps: Step[] = [
-    { id:1, name: 'Creación del Proyecto', command: 'ng new my-app', status: 'pending',lastRun: new Date() },
+  /*  { id:1, name: 'Creación del Proyecto', command: 'ng new my-app', status: 'pending',lastRun: new Date() },
     { id:2, name: 'Desarrollo', command: 'ng serve', status: 'pending',lastRun: new Date() },
     { id:3, name: 'Producción', command: 'ng build', status: 'pending',lastRun: new Date() },
-    { id:4, name: 'Despliegue', command: 'ng deploy', status: 'pending',lastRun: new Date() }
+    { id:4, name: 'Despliegue', command: 'ng deploy', status: 'pending',lastRun: new Date() } */
   ];
   stepOnExecution: Step|any;
 
@@ -96,13 +100,34 @@ export class PipelineComponent implements OnInit{
 
   directory: string = '';
 
-
+  //Actual project - task
+  actualProject:string = ""
 
   ngOnInit(): void {
     this.getCurrentDirectory(); // Obtener el directorio actual al iniciar la aplicación
-    
+    this.route.paramMap.subscribe(params => {
+      const taskId = params.get('taskId');
+      if (taskId) {
+        this.loadStepByTaskId(taskId);
+        this.actualProject = taskId;
+      } else {
+        //this.loadAllTasks();
+      }
+    });
   }
 
+  loadAllSteps(){
+    this.stepService.getAllSteps().subscribe((stps:any)=>{
+      this.steps = stps;
+      console.log(this.steps)
+    })
+  }
+  loadStepByTaskId(taskId: string){
+    this.stepService.getStepsByTaskId(taskId).subscribe((stps:any)=>{
+      this.steps = stps;
+      console.log(this.steps)
+    })
+  }
   // Funciones para el modal de configuración
   openModal(step:Step) {
     this.stepSettingsModalOpen = true; // Abrir el modal
@@ -146,14 +171,12 @@ export class PipelineComponent implements OnInit{
     this.stepOnExecution= step;
     this.toastr.info(`Ejecutando: ${step.command}`, 'Ejecutando');
     step.status = 'in-progress';
-   /*  setTimeout(() => {
+    /*  setTimeout(() => {
       step.status = 'completed';
       this.toastr.success(`Completado: ${step.command}`, 'Éxito');
     }, 2000); // Simulación de tiempo de ejecución
      */
     this.command=step.command;
-
-
   }
 
 
@@ -207,58 +230,41 @@ export class PipelineComponent implements OnInit{
 
   ///COMMAND execution functions
 
- /*  selectDirectory(): void {
+/*  selectDirectory(): void {
     (window as any).electronAPI.selectfolder().then((dir: string) => {
       this.currentDirectory = dir; // Actualizar el directorio actual seleccionado
     }).catch((error: any) => {
       this.error += 'Error selecting directory: ' + error + '\n';
     });
   } */
-    selectDirectory(): void {
-      (window as any).electronAPI.selectFolder();
-      console.log(this.currentDirectory)
-    } 
- /*  executeCommand(): void {
-    this.output = '';
-    this.error = '';
+  selectDirectory(): void {
+    (window as any).electronAPI.selectFolder();
+    console.log(this.currentDirectory)
+  } 
 
-    if ((window as any).electronAPI && this.currentDirectory) {
-      (window as any).electronAPI.openTerminal(this.command, this.currentDirectory)
-        .then((response: any) => {
-          this.output += response + '\n';
+  executeCommand() {
+    this.commandExecuting = true;
+    if ((<any>window).electronAPI) {
+      (<any>window).electronAPI.executeCommand(this.command)
+        .then((result: any) => {
+          this.output = result.output;
+          this.error = result.error;
+          this.getCurrentDirectory(); // Actualizar el directorio después de ejecutar el comando
+          this.commandExecuting = false; // Marcar como finalizado
+          this.stepOnExecution.status = 'completed';
+          this.toastr.success(`Completado: ${this.stepOnExecution.command}`, 'Éxito');
         })
         .catch((error: any) => {
-          this.error += 'Error: ' + error + '\n';
+          this.error = error.message;
+          this.commandExecuting = false; // Marcar como finalizado
+          this.stepOnExecution.status = 'error';
+          this.toastr.success(`Ocurrión un error: ${this.stepOnExecution.command}`, '.');
         });
     } else {
-      this.error += 'Unable to execute command. Current directory not available.\n';
+      console.error('Electron API not available');
+      this.commandExecuting = false; // Marcar como finalizado en caso de error
     }
-  } */
-    executeCommand() {
-      this.commandExecuting = true;
-      if ((<any>window).electronAPI) {
-        (<any>window).electronAPI.executeCommand(this.command)
-          .then((result: any) => {
-            this.output = result.output;
-            this.error = result.error;
-            this.getCurrentDirectory(); // Actualizar el directorio después de ejecutar el comando
-            this.commandExecuting = false; // Marcar como finalizado
-            this.stepOnExecution.status = 'completed';
-            this.toastr.success(`Completado: ${this.stepOnExecution.command}`, 'Éxito');
-          })
-          .catch((error: any) => {
-            this.error = error.message;
-            this.commandExecuting = false; // Marcar como finalizado
-            this.stepOnExecution.status = 'error';
-            this.toastr.success(`Ocurrión un error: ${this.stepOnExecution.command}`, '.');
-
-          
-          });
-      } else {
-        console.error('Electron API not available');
-        this.commandExecuting = false; // Marcar como finalizado en caso de error
-      }
-    }
+  }
 
 
   getCurrentDirectory() {
@@ -275,8 +281,6 @@ export class PipelineComponent implements OnInit{
       console.error('Electron API not available');
     }
   }
-
-
 }
 
 
