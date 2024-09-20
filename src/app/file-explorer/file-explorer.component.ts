@@ -21,6 +21,7 @@ export class FileExplorerComponent implements OnInit {
   currentPath: string = '';
   filesAndFolders: { name: string, isFile: boolean }[] = [];
   fileContent: string = '';
+  devoraComments: string[] = [];  // Aquí se almacenarán los comentarios con el tag devora
 
   constructor(private cdr: ChangeDetectorRef) { 
     (window as any).electronAPI.onSelectFolderResponse((event: any, folderPath: string) => {
@@ -65,12 +66,16 @@ export class FileExplorerComponent implements OnInit {
   async readFile(filePath: string) {
     try {
       this.fileContent = await (window as any).electronAPI.readFile(filePath);
+      this.extractDevoraComments(this.fileContent); // Extraer comentarios con devora
     } catch (error) {
       console.error('Error al leer el archivo:', error);
       // Manejar el error de acuerdo a tus necesidades
     }
   }
-
+  extractDevoraComments(content: string): void {
+    const lines = content.split('\n');
+    this.devoraComments = lines.filter(line => line.includes('//devora//')); // Filtra las líneas que contienen //devora//
+  }
 
   onEntryClick(entry: { name: string, isFile: boolean }) {
     const fullPath = this.currentPath+"\\"+entry.name;

@@ -1,20 +1,32 @@
 <div class="p-4">
-    <h2 class="text-xl font-bold mb-4">File Explorer</h2>
-    <div class="flex items-center mb-4">
-      <input [(ngModel)]="inputPath" placeholder="Enter directory path" class="border rounded px-4 py-2 mr-2 w-full" />
-      <button (click)="openDirectory()" class="bg-green-600 text-white px-4 py-1 rounded m-2">Open Directory</button>
-      <button (click)="onPathSubmit()" class="bg-blue-500 text-white px-4 py-1 rounded">Read Directory</button>
-    </div>
-    <div class="flex items-center mb-4">
-      <button (click)="goUpDir()" class="bg-blue-500 text-white px-4 py-2 rounded mr-4">Go Up</button>
-      <span class="text-gray-600">{{ currentPath }}</span>
-    </div>
-    <ul class="list-none p-0">
-      <li *ngFor="let entry of filesAndFolders" (click)="onEntryClick(entry)" class="cursor-pointer p-2 hover:bg-gray-100 flex items-center">
-        <span [ngClass]="{ 'folder-icon': !entry.isFile, 'file-icon': entry.isFile }" class="mr-2"></span>
-        <span>{{ entry.name }}</span>
-      </li>
-    </ul>
-    <pre class="bg-gray-100 p-4 border border-gray-300 rounded mt-4 overflow-x-auto">{{ fileContent }}</pre>
+  <h2 class="text-xl font-bold mb-4">File Explorer</h2>
+  <div class="flex items-center mb-4">
+    <input [(ngModel)]="inputPath" placeholder="Enter directory path" class="border rounded px-4 py-2 mr-2 w-full" />
+    <button (click)="openDirectory()" class="bg-green-600 text-white px-4 py-1 rounded m-2">Open Directory</button>
+    <button (click)="onPathSubmit()" class="bg-blue-500 text-white px-4 py-1 rounded">Read Directory</button>
+  </div>
+  <div class="flex items-center mb-4">
+    <button (click)="goUpDir()" class="bg-blue-500 text-white px-4 py-2 rounded mr-4">Go Up</button>
+    <span class="text-gray-600">{{ currentPath }}</span>
   </div>
   
+  <!-- Listado de archivos y carpetas -->
+  <ul class="list-none p-0">
+    <li *ngFor="let entry of filesAndFolders" (click)="onEntryClick(entry)" class="cursor-pointer p-2 hover:bg-gray-100 flex items-center">
+      <span [ngClass]="{ 'folder-icon': !entry.isFile, 'file-icon': entry.isFile }" class="mr-2"></span>
+      <span>{{ entry.name }}</span>
+    </li>
+  </ul>
+
+   <!-- Sección para comentarios con //devora// -->
+   <div *ngIf="devoraComments.length > 0" class="mt-4">
+    <h3 class="text-lg font-bold mb-2">Comentarios con //devora//</h3>
+    <ul class="list-disc pl-4">
+      <li *ngFor="let comment of devoraComments">{{ comment }}</li>
+    </ul>
+  </div>
+  <!-- Contenido del archivo -->
+  <pre class="bg-gray-100 p-4 border border-gray-300 rounded mt-4 overflow-x-auto">{{ fileContent }}</pre>
+
+
+</div>
