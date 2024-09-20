@@ -1,6 +1,7 @@
 import { Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { initFlowbite } from 'flowbite';
+import { SidebarService } from '../utilities/services/sidebar.service';
 
 @Component({
   selector: 'app-header',
@@ -12,11 +13,17 @@ import { initFlowbite } from 'flowbite';
 export class HeaderComponent implements OnInit {
   
   
-  constructor(@Inject(PLATFORM_ID) private platformId: Object, 
+  constructor(
+    @Inject(PLATFORM_ID) private platformId: Object, 
+  private sidebarService: SidebarService,
   ) { }
   ngOnInit(): void {
     if (isPlatformBrowser(this.platformId)) {
       initFlowbite();
     }
+  }
+  toggleSidebar() {
+    console.log()
+    this.sidebarService.toggleSidebar();
   }
 }

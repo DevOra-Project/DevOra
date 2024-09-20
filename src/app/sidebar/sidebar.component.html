@@ -1,4 +1,4 @@
-<div class=" bg-gradient-to-l from-violet-950 to-indigo-950  hidden md:flex h-screen flex-col justify-between w-48 fixed left-0 top-0 bottom-0 pt-24">
+<div [ngClass]="{ 'hidden md:flex': !isVisible, 'block md:block': isVisible }" class=" bg-gradient-to-l from-violet-950 to-indigo-950  hidden md:flex h-screen flex-col justify-between w-48 fixed left-0 top-0 bottom-0 pt-24">
   <ul class="space-y-4">
       <li *ngFor="let item of items" class="flex items-center p-2 hover:bg-zinc-800 rounded-md" >
         <div class="w-full flex">
@@ -10,7 +10,7 @@
       </li>
     </ul>
 
-    <div class="pb-5  px-4">
+<!--     <div class="pb-5  px-4">
       <hr class="mb-5 text-zinc-700" />
       <a href="#" class="py-2 flex items-center text-zinc-500">
         <span class="bg-zinc-800 w-8 h-8 grid place-items-center mr-2 rounded-md">
@@ -23,5 +23,8 @@
         </span>
         Logout
       </a>
+    </div> -->
+    <div class="pb-4">
+      <button (click)="logout()" class="text-white w-full text-left p-4 hover:bg-red-700">Cerrar Sesión</button>
     </div>
   </div>

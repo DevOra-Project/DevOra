@@ -7,6 +7,8 @@ import { ProjectProgress } from '../utilities/models/project-progress';
 import { FormsModule } from '@angular/forms';
 import { GithubService } from '../utilities/services/github.service';
 import { UserService } from '../utilities/services/user.service';
+import { CookiesService } from '../utilities/services/cookies.service';
+
 
 @Component({
   selector: 'app-profile',
@@ -28,14 +30,15 @@ export class ProfileComponent implements OnInit {
   constructor(@Inject(PLATFORM_ID) private platformId: Object, 
     private router: Router,
     private githubService: GithubService,
-    private userService: UserService
+    private userService: UserService,
+    private cookieService: CookiesService
   ) { }
   ngOnInit(): void {
     if (isPlatformBrowser(this.platformId)) {
       initFlowbite();
     }
 
-    this.user = new User(
+/*     this.user = new User(
       1, // ID del usuario
       'JLT',
       'example@example.com',
@@ -60,9 +63,9 @@ export class ProfileComponent implements OnInit {
         new ProjectProgress(104, 'Tue 02/07', 26),
         new ProjectProgress(105, 'Wed 03/07', 27)
       ]
-    );
+    ); */
 
-    this.userService.getUser(3).subscribe((us:User)=>{
+    this.userService.getUser(parseInt(this.cookieService.getToken("user_id"))).subscribe((us:User)=>{
       this.user=us;
     })
 

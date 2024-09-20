@@ -4,6 +4,9 @@ import { Router, RouterOutlet } from '@angular/router';
 import { initFlowbite } from 'flowbite';
 import { IconsComponent } from './icons/icons.component';
 import { routes } from '../app.routes';
+import { Subscription } from 'rxjs';
+import { SidebarService } from '../utilities/services/sidebar.service';
+import { AuthService } from '../utilities/services/auth.service';
 
 @Component({
   selector: 'app-sidebar',
@@ -18,6 +21,9 @@ import { routes } from '../app.routes';
   styleUrl: './sidebar.component.scss'
 })
 export class SidebarComponent implements OnInit{
+  isVisible = false;
+  sidebarSubscription: Subscription | null = null;
+
 
   items = [
     { icon: 'favourites', label:'Projects',link: 'projects'},
@@ -29,7 +35,10 @@ export class SidebarComponent implements OnInit{
     { icon: 'person', label: 'Profile',link: 'profile' },
   ];
 
-  constructor(@Inject(PLATFORM_ID) private platformId: Object,
+  constructor(
+    @Inject(PLATFORM_ID) private platformId: Object,
+    private sidebarService: SidebarService,
+    private authService: AuthService,
   ){}
   ngOnInit(): void {
     if (isPlatformBrowser(this.platformId)) {
@@ -37,5 +46,17 @@ export class SidebarComponent implements OnInit{
     }
 
   }
+  toggleSidebar() {
+    this.sidebarService.toggleSidebar();
+  }
+
+  logout(): void {
+    try {
+      this.authService.logout();
+    } catch (error) {
+      console.error('Error during logout:', error);
+    }
+  }
+
 
 }
