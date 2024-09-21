@@ -3,11 +3,11 @@
     <div >
       <div class="mb-4">
         <label class="block text-sm font-medium mb-1" for="usernameOrEmail">Nombre de Usuario o Correo</label>
-        <input type="text" id="usernameOrEmail" [(ngModel)]="loginData.usernameOrEmail" name="usernameOrEmail" class="w-full p-2 bg-gray-800 rounded" required>
+        <input type="text" id="usernameOrEmail" [(ngModel)]="loginData.usernameOrEmail" name="usernameOrEmail" class="w-full p-2 bg-gray-800 rounded" (keyup.enter)="onSubmit()" required>
       </div>
       <div class="mb-4">
         <label class="block text-sm font-medium mb-1" for="password">Contraseña</label>
-        <input type="password" id="password" [(ngModel)]="loginData.password" name="password" class="w-full p-2 bg-gray-800 rounded" required>
+        <input type="password" id="password" [(ngModel)]="loginData.password" name="password" class="w-full p-2 bg-gray-800 rounded" (keyup.enter)="onSubmit()" required>
       </div>
       <button type="submit" class="w-full bg-blue-600 p-2 rounded" (click)="onSubmit()">Ingresar</button>
     </div>

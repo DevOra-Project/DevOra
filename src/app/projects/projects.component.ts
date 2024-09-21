@@ -113,16 +113,16 @@ export class ProjectsComponent {
       const userId = this.cookiesService.getToken('user_id'); // Obtén el user_id del token
       const userProject = new UserProject(parseInt(this.cookiesService.getToken('user_id')), res.id,res.localPath);
 
-      console.log(userProject)
-      this.userProjectService.createUserProject(userProject).subscribe(
+      this.userProjectService.addUserToProject(userId, res.id,res.localPath).subscribe(
         (upRes: any) => {
-        console.log("Asignación creada:", upRes);
-        this.toastr.success("Asignación creada:", upRes);
-        this.cdr.detectChanges(); // Fuerza la detección de cambios
-        (error:any)=>{
+          console.log("Asignación creada:", upRes);
+          this.toastr.success("Asignación creada correctamente");
+          this.cdr.detectChanges(); // Fuerza la detección de cambios
+        },
+        (error: any) => {
           console.log(error);
         }
-      });
+      );
     });
     this.closeNewProjectModal(); // Cierra el modal
   }
