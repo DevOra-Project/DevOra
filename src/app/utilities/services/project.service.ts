@@ -20,6 +20,11 @@ export class ProjectService {
     return this.http.get(`${this.baseUrl}/projects/${id}`);
   }
 
+    // Nuevo método para obtener proyectos por userId
+  getProjectsByUserId(userId: string): Observable<any> {
+    return this.http.get(`${this.baseUrl}/projects/user/${userId}`);
+  }
+  
   createProject(project: any): Observable<any> {
     return this.http.post(`${this.baseUrl}/projects`, project);
   }

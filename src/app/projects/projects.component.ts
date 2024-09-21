@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { LanguageColorService } from '../utilities/services/language-color.service';
 import { ProjectService } from '../utilities/services/project.service';
 import { Router } from '@angular/router';
+import { CookiesService } from '../utilities/services/cookies.service';
 
 @Component({
   selector: 'app-proyects',
@@ -21,26 +22,31 @@ export class ProjectsComponent {
   selectedProject: Project | null = null;
 
   projects: Project[] = [
-    new Project('LandingDP', 'LandingDP'),
+   /*  new Project('LandingDP', 'LandingDP'),
     new Project('MovilesApps', 'MovilesApps repository'),
     new Project('CheapShop-Frontend', 'Forked from Good-Solutions/CheapShop-Frontend', 'Vue'),
     new Project('LearningCenterAPI', 'ACME learning center', 'C#','c-sharp'),
     new Project('IOTLandingPage', 'IOTLandingPage', 'CSS'),
-    new Project('psychohelp_webapp', 'Forked from PsychoHelp-App-Moviles/psychohelp_webapp', 'TypeScript')
+    new Project('psychohelp_webapp', 'Forked from PsychoHelp-App-Moviles/psychohelp_webapp', 'TypeScript') */
   ];
 
 
   constructor(private languageColorService: LanguageColorService,
     private projectService:ProjectService,
+    private cookiesService:CookiesService,
     private router:Router,
     private cdr: ChangeDetectorRef
   ) { }
 
   ngOnInit(): void {
-    this.projectService.getProjects().subscribe(data => {
+
+ /*    this.projectService.getProjects().subscribe(data => {
+      this.projects = data;
+    });  */
+    this.projectService.getProjectsByUserId(this.cookiesService.getToken('user_id')).subscribe(data => {
       this.projects = data;
     }); 
-
+    
     this.projects.forEach(project => {
       this.projectColorChange(project)
     });
@@ -72,9 +78,12 @@ export class ProjectsComponent {
       } 
     }
 
-    this.projectService.getProjects().subscribe(data => {
+    /*  this.projectService.getProjects().subscribe(data => {
       this.projects = data;
-    });//Reload forzado, mejorar
+    }); *///Reload forzado, mejorar
+    this.projectService.getProjectsByUserId(this.cookiesService.getToken('user_id')).subscribe(data => {
+      this.projects = data;
+    });
     this.cdr.detectChanges(); 
     
     this.closeModal();
