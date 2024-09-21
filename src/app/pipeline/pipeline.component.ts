@@ -45,6 +45,7 @@ export class PipelineComponent implements OnInit{
 
   }
 
+  currenTaskId:string = ''
   steps: Step[] = [];
   stepOnExecution: Step|any;
   newStep: Step = {
@@ -117,10 +118,10 @@ export class PipelineComponent implements OnInit{
   ngOnInit(): void {
     this.getCurrentDirectory(); // Obtener el directorio actual al iniciar la aplicación
     this.route.paramMap.subscribe(params => {
-      const taskId = params.get('taskId');
-      if (taskId) {
-        this.loadStepByTaskId(taskId);
-        this.taskService.getProjectTask(taskId).subscribe(
+      this.currenTaskId = params.get('taskId')!;
+      if (this.currenTaskId) {
+        this.loadStepByTaskId(this.currenTaskId );
+        this.taskService.getProjectTask(this.currenTaskId ).subscribe(
           (response:ProjectTask)=>{
             this.actualTask = response
             },
@@ -187,6 +188,8 @@ export class PipelineComponent implements OnInit{
     this.stepService.createStep(this.newStep).subscribe(response => {
       this.toastr.success('Step creado exitosamente')
       console.log('Step creado exitosamente:', response);
+      this.newStep = new Step('','','')
+      this.stepService.getStepsByTaskId(this.currenTaskId)
       this.closeModal();
     }, error => {
       this.toastr.error('Error al crear el step')
