@@ -29,6 +29,43 @@
   </div>
 </div>
 
+<!-- Botón para abrir el modal de nuevo proyecto -->
+<button (click)="openNewProjectModal()" class="bg-green-500 text-white px-4 py-2 rounded-md mb-4">Añadir Proyecto</button>
+
+<!-- Modal para añadir un nuevo proyecto -->
+<div *ngIf="newProject" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+  <div class="bg-white rounded-lg shadow-lg p-6 max-w-sm mx-auto">
+    <h2 class="text-lg font-semibold mb-4">Añadir nuevo proyecto</h2>
+    <div class="mb-4">
+      <label class="block text-sm font-medium text-gray-700">Nombre</label>
+      <input [(ngModel)]="newProject.name" class="w-full px-3 py-2 border rounded-md" type="text" placeholder="Nombre del proyecto">
+    </div>
+    <div class="mb-4">
+      <label class="block text-sm font-medium text-gray-700">Descripción</label>
+      <textarea [(ngModel)]="newProject.description" class="w-full px-3 py-2 border rounded-md" placeholder="Descripción del proyecto"></textarea>
+    </div>
+    <div class="mb-4">
+      <label class="block text-sm font-medium text-gray-700">Lenguaje</label>
+      <select [(ngModel)]="newProject.language" class="w-full px-3 py-2 border rounded-md">
+        <option value="Angular">Angular</option>
+        <option value="HTML">HTML</option>
+        <option value="CSS">CSS</option>
+        <option value="Node.js">Node.js</option>
+        <option value="Spring Boot">Spring Boot</option>
+        <option value="TypeScript">TypeScript</option>
+        <option value="Vue">Vue</option>
+        <option value="C#">C#</option>
+      </select>
+    </div>
+    <div class="mb-4">
+      <label class="block text-sm font-medium text-gray-700">local path</label>
+      <input [(ngModel)]="newProject.localPath" class="w-full px-3 py-2 border rounded-md" type="text" placeholder="Nombre del proyecto">
+    </div>
+    <button (click)="createProject()" class="bg-blue-500 text-white px-4 py-2 rounded-md">Crear Proyecto</button>
+    <button (click)="closeNewProjectModal()" class="ml-2 text-gray-600 hover:text-gray-800" >Cancelar</button>
+  </div>
+</div>
+
 <!-- Modal -->
 <div *ngIf="selectedProject" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
   <div class="bg-white rounded-lg shadow-lg p-6 max-w-sm mx-auto">

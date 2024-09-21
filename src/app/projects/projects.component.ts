@@ -6,6 +6,9 @@ import { LanguageColorService } from '../utilities/services/language-color.servi
 import { ProjectService } from '../utilities/services/project.service';
 import { Router } from '@angular/router';
 import { CookiesService } from '../utilities/services/cookies.service';
+import { UserProject } from '../utilities/models/user_project';
+import { UserProjectService } from '../utilities/services/user-project.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-proyects',
@@ -22,25 +25,23 @@ export class ProjectsComponent {
   selectedProject: Project | null = null;
 
   projects: Project[] = [
-   /*  new Project('LandingDP', 'LandingDP'),
-    new Project('MovilesApps', 'MovilesApps repository'),
-    new Project('CheapShop-Frontend', 'Forked from Good-Solutions/CheapShop-Frontend', 'Vue'),
-    new Project('LearningCenterAPI', 'ACME learning center', 'C#','c-sharp'),
-    new Project('IOTLandingPage', 'IOTLandingPage', 'CSS'),
-    new Project('psychohelp_webapp', 'Forked from PsychoHelp-App-Moviles/psychohelp_webapp', 'TypeScript') */
+  
   ];
 
+  newProject :Project|any; // Inicializa un nuevo proyecto
 
   constructor(private languageColorService: LanguageColorService,
     private projectService:ProjectService,
     private cookiesService:CookiesService,
+    private userProjectService: UserProjectService,
+    private toastr: ToastrService,
     private router:Router,
     private cdr: ChangeDetectorRef
   ) { }
 
   ngOnInit(): void {
 
- /*    this.projectService.getProjects().subscribe(data => {
+  /*    this.projectService.getProjects().subscribe(data => {
       this.projects = data;
     });  */
     this.projectService.getProjectsByUserId(this.cookiesService.getToken('user_id')).subscribe(data => {
@@ -92,6 +93,43 @@ export class ProjectsComponent {
 
   closeModal(): void {
     this.selectedProject = null;
+  }
+
+
+  openNewProjectModal(): void {
+    this.newProject = new Project('', '', ''); // Reinicia el nuevo proyecto al abrir el modal
+  }
+
+  createProject(): void {
+    if(this.newProject.localPath==null||this.newProject.localPath==null||this.newProject.localPath==undefined){
+      this.toastr.warning("Please select a local path")
+      this.newProject.localPath =" "
+    }
+    this.projectService.createProject(this.newProject).subscribe((res: any) => {
+      console.log(res);
+      this.projects.push(res); // Agrega el nuevo proyecto a la lista
+      
+      // Crear asignación de usuario a proyecto
+      const userId = this.cookiesService.getToken('user_id'); // Obtén el user_id del token
+      const userProject = new UserProject(parseInt(this.cookiesService.getToken('user_id')), res.id,res.localPath);
+
+      console.log(userProject)
+      this.userProjectService.createUserProject(userProject).subscribe(
+        (upRes: any) => {
+        console.log("Asignación creada:", upRes);
+        this.toastr.success("Asignación creada:", upRes);
+        this.cdr.detectChanges(); // Fuerza la detección de cambios
+        (error:any)=>{
+          console.log(error);
+        }
+      });
+    });
+    this.closeNewProjectModal(); // Cierra el modal
+  }
+
+
+  closeNewProjectModal(): void {
+    this.newProject = undefined // Reinicia el proyecto al cerrar
   }
 
   redirectToProjectTask(projectId:number){
