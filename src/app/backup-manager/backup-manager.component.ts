@@ -1,6 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { CookiesService } from '../utilities/services/cookies.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-backup-manager',
@@ -18,21 +20,29 @@ export class BackupManagerComponent {
   backupVersion: string = 'Vs.1.0.0';
   showModal: boolean = false;
 
-  constructor(private cdr: ChangeDetectorRef) {
+  constructor(
+    private cdr: ChangeDetectorRef,
+    private cookiesService: CookiesService,
+    private toastr: ToastrService
+  ) {
     // Escuchar las respuestas del main process
     (window as any).electronAPI.onCloneProjectResponse((event: any, response: string) => {
       if (response === 'success') {
         console.log('Clonado exitoso');
+        toastr.success('Clonado exitoso');
       } else {
         console.error('Error en el clonado');
+        toastr.success('Error en el clonado');
       }
     });
 
     (window as any).electronAPI.onRollbackProjectResponse((event: any, response: string) => {
       if (response === 'success') {
         console.log('Rollback exitoso');
+        toastr.success('Rollback exitoso');
       } else {
         console.error('Error en el rollback');
+        toastr.success('Error en el rollback');
       }
     });
 
@@ -40,9 +50,11 @@ export class BackupManagerComponent {
       if (folderPath) {
         this.projectPath = folderPath;
         console.log('Carpeta seleccionada:', folderPath);
+        toastr.success('Carpeta seleccionada:', folderPath);
         this.cdr.detectChanges(); // Fuerza la detección de cambios
       } else {
         console.error('Selección de carpeta cancelada');
+        toastr.error('Selección de carpeta cancelada')
       }
     });
   }

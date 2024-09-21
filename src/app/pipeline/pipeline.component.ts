@@ -8,6 +8,9 @@ import { ElectronService } from 'ngx-electron';
 import { CommentaryService } from '../utilities/services/commentary.service';
 import { ActivatedRoute } from '@angular/router';
 import { StepService } from '../utilities/services/step.service';
+import { Task } from 'electron';
+import { TaskService } from '../utilities/services/task.service';
+import { ProjectTask } from '../utilities/models/projectTask';
 
 @Component({
   selector: 'app-pipeline',
@@ -26,7 +29,8 @@ export class PipelineComponent implements OnInit{
     private toastr: ToastrService,
     private route:ActivatedRoute,
     private commentaryService: CommentaryService,
-    private stepService: StepService 
+    private stepService: StepService,
+    private taskService: TaskService
   ) {
 
     (window as any).electronAPI.onSelectFolderResponse((event: any, folderPath: string) => {
@@ -41,20 +45,18 @@ export class PipelineComponent implements OnInit{
 
   }
 
-  steps: Step[] = [
-  /*  { id:1, name: 'Creación del Proyecto', command: 'ng new my-app', status: 'pending',lastRun: new Date() },
-    { id:2, name: 'Desarrollo', command: 'ng serve', status: 'pending',lastRun: new Date() },
-    { id:3, name: 'Producción', command: 'ng build', status: 'pending',lastRun: new Date() },
-    { id:4, name: 'Despliegue', command: 'ng deploy', status: 'pending',lastRun: new Date() } */
-  ];
+  steps: Step[] = [];
   stepOnExecution: Step|any;
+  newStep: Step = {
+    id: 0,
+    name: '',
+    command: '',
+    status: '',
+  };
 
   // STEP CONFIGURTION
   stepSettingsModalOpen: boolean = false; // Variable para controlar la apertura del modal
-  stepOnConfig: Step = new Step('', '', '', new Date()); // Step seleccionado para editar (vacío inicialmente)
-
-
-
+  stepOnConfig: Step = new Step('', '', ''); // Step seleccionado para editar (vacío inicialmente)
   //Comments
   comments: Commentary[] = [
     // Comentarios para el pipeline "Creación del Proyecto"
@@ -94,14 +96,23 @@ export class PipelineComponent implements OnInit{
   command: string = '';
   output: string = '';
   error: string = '';
-  currentDirectory: string = '';//Probably deprecated
-
+  currentDirectory: string = '';//Probably deprecate
   commandExecuting: boolean = false;
-
   directory: string = '';
 
   //Actual project - task
-  actualProject:string = ""
+  actualTask:Task|any
+
+  //MOdal create
+  isCreateModalOpen: boolean = false;
+  openModalCreate() {
+    this.isCreateModalOpen = true;
+  }
+
+  // Función para cerrar el modal
+  closeModalCreate() {
+    this.isCreateModalOpen = false;
+  }
 
   ngOnInit(): void {
     this.getCurrentDirectory(); // Obtener el directorio actual al iniciar la aplicación
@@ -109,7 +120,15 @@ export class PipelineComponent implements OnInit{
       const taskId = params.get('taskId');
       if (taskId) {
         this.loadStepByTaskId(taskId);
-        this.actualProject = taskId;
+        this.taskService.getProjectTask(taskId).subscribe(
+          (response:ProjectTask)=>{
+            this.actualTask = response
+            },
+          error =>{
+            this.toastr.error('Error al traer task')
+          }
+        )
+        //this.actualTask = taskId;
       } else {
         //this.loadAllTasks();
       }
@@ -138,10 +157,41 @@ export class PipelineComponent implements OnInit{
     this.stepSettingsModalOpen = false; // Cerrar el modal
   }
 
-  saveChanges() {
+  saveChanges(stepConf:Step) {
     // Aquí implementarías la lógica para guardar los cambios del step seleccionado
+    this.stepService.updateStep(stepConf.id!,stepConf).subscribe(
+      reponse =>{
+        this.toastr.success("Actualizado correctamente")
+        console.log(this.calculateProjectProgress(this.steps))
+      },
+      error=>{
+        this.toastr.success("Ocurrió un error", error)
+      }
+    )
+
     console.log('Guardando cambios:', this.stepOnConfig);
     this.closeModal(); // Cerrar el modal después de guardar
+  }
+
+
+// Enviar el formulario para crear un nuevo step
+  submitStep() {
+    // Aquí formateamos la fecha a la representación en formato ISO
+    const now = new Date();
+    const formattedDate = now.toISOString(); // "YYYY-MM-DDTHH:mm:ssZ"
+    this.newStep.projectTaskId = parseInt(this.actualTask.id);
+    if (!this.newStep.lastRun) {
+      this.newStep.lastRun=formattedDate; // Usar la fecha formateada
+    }
+
+    this.stepService.createStep(this.newStep).subscribe(response => {
+      this.toastr.success('Step creado exitosamente')
+      console.log('Step creado exitosamente:', response);
+      this.closeModal();
+    }, error => {
+      this.toastr.error('Error al crear el step')
+      console.error('Error al crear el step:', error);
+    });
   }
 
   // Funciones para el modal de confirmación
@@ -168,15 +218,18 @@ export class PipelineComponent implements OnInit{
 
   // Función para ejecutar el paso del pipeline
   executeStep(step: Step) {
-    this.stepOnExecution= step;
-    this.toastr.info(`Ejecutando: ${step.command}`, 'Ejecutando');
-    step.status = 'in-progress';
-    /*  setTimeout(() => {
-      step.status = 'completed';
-      this.toastr.success(`Completado: ${step.command}`, 'Éxito');
-    }, 2000); // Simulación de tiempo de ejecución
-     */
-    this.command=step.command;
+    if(step.command!=null && step.command!=undefined){
+      this.stepOnExecution= step;
+      this.toastr.info(`Ejecutando: ${step.command}`, 'Ejecutando');
+      step.status = 'in-progress';
+
+      this.saveChanges(this.stepOnExecution)
+      this.command=step.command;
+    }else{
+      this.toastr.info("Realizando avance del proyeto(Sin comandos)");
+      step.status = 'in-progress';
+    }
+
   }
 
 
@@ -253,6 +306,7 @@ export class PipelineComponent implements OnInit{
           this.commandExecuting = false; // Marcar como finalizado
           this.stepOnExecution.status = 'completed';
           this.toastr.success(`Completado: ${this.stepOnExecution.command}`, 'Éxito');
+          this.saveChanges(this.stepOnExecution)
         })
         .catch((error: any) => {
           this.error = error.message;
@@ -280,6 +334,36 @@ export class PipelineComponent implements OnInit{
     } else {
       console.error('Electron API not available');
     }
+  }
+
+  calculateProjectProgress(steps: Step[]): number {
+    const totalSteps = steps.length;
+    if (totalSteps === 0) return 0.00; // Si no hay steps, el avance es 0
+
+    let totalPercentage = 0;
+
+    steps.forEach(step => {
+        if (step.status === 'pending') {
+            totalPercentage += 0; // 0%
+        } else if (step.status === 'in-progress') {
+            totalPercentage += 50; // 50%
+        } else if (step.status === 'completed') {
+            totalPercentage += 100; // 100%
+        }
+    });
+
+
+    const averagePercentage = totalPercentage / totalSteps;
+    this.actualTask.progress = Math.round(averagePercentage);
+    console.log(this.actualTask.progress)
+    this.taskService.updateProjectTask(this.actualTask.id,this.actualTask).subscribe(
+      (response: any) => {
+        this.toastr.success("Progreso de Tarea modificado: "+ this.actualTask.progress+'%')
+      }
+    )
+
+    // Calcular el porcentaje promedio
+    return Math.round(averagePercentage);;
   }
 }
 

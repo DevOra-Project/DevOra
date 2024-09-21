@@ -100,11 +100,19 @@
           <label for="stepCommand" class="block text-sm font-medium text-gray-700">Comando del Step</label>
           <input type="text" id="stepCommand" name="stepCommand" [(ngModel)]="stepOnConfig.command" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
         </div>
+        <div class="mb-4">
+          <label for="stepStatus" class="block text-sm font-medium text-gray-700">Estado del Step</label>
+          <select id="stepStatus" name="stepStatus" [(ngModel)]="stepOnConfig.status" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+            <option value="pending">Pendiente</option>
+            <option value="in-progress">En Progreso</option>
+            <option value="completed">Completado</option>
+          </select>
+          </div>
         <div class="flex justify-end">
           <button 
             type="button" 
             class="bg-blue-500 text-white rounded px-4 py-2"
-            (click)="saveChanges()">
+            (click)="saveChanges(stepOnConfig)">
             Guardar
           </button>
           <button 
@@ -117,7 +125,61 @@
       </form>
     </div>
   </div>
+
+
+<!-- Modal crear (controlado con TS) -->
+<!-- Botón para abrir el modal -->
+<button
+  (click)="openModalCreate()"
+  class="block my-2 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+  type="button">
+  Crear Nuevo Step
+</button>
+
+<!-- Modal create -->
+<div *ngIf="isCreateModalOpen" class="fixed z-10 inset-0 overflow-y-auto">
+  <div class="flex items-center justify-center min-h-screen">
+    <div class="relative bg-white rounded-lg shadow dark:bg-gray-700 w-1/3">
+      <div class="px-6 py-4">
+        <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
+          Crear nuevo Step
+        </h3>
+        <button (click)="closeModalCreate()" class="absolute top-3 right-3 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white" aria-label="Close">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M10 9.293l4.646-4.647a.5.5 0 01.708.708L10.707 10l4.647 4.646a.5.5 0 01-.708.708L10 10.707l-4.646 4.647a.5.5 0 01-.708-.708L9.293 10 4.646 5.354a.5.5 0 11.708-.708L10 9.293z" clip-rule="evenodd"></path>
+          </svg>
+        </button>
+      </div>
+      <div class="px-6 py-4">
+        <div (submit)="submitStep()">
+          <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-700">Nombre</label>
+            <input type="text" [(ngModel)]="newStep.name" name="name" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+          </div>
+          <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-700">Comando</label>
+            <textarea [(ngModel)]="newStep.command" name="command" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"></textarea>
+          </div>
+          <!-- Otros campos aquí (status, last_run, local_path, etc.) -->
+          <button (click)="submitStep()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+            Guardar Step
+          </button>
+          <button (click)="closeModalCreate()" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+           Cerrar
+          </button>
+
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
+
+
+
+
+
+
+<!-- Pipeline de discución:-->
 <div *ngIf="selectedPipeline" class="mt-8">
   <div class="flex justify-between">
     <h2 class="text-xl font-semibold">Discussion for {{ selectedPipeline.name }}</h2>
@@ -143,27 +205,7 @@
   <hr class="h-px  my-8 bg-gray-200 border-0 dark:bg-gray-700">
 </div>
 
-<!-- 
-  <h1 class="text-2xl font-bold mb-4">Console Executor</h1>
-  <div class="mb-4">
-    <input [(ngModel)]="command" placeholder="Enter command" class="w-full p-2 border border-gray-300 rounded" />
-  </div>
-  <div class="mb-4">
-    <button (click)="executeCommand()" class="px-4 py-2 bg-blue-500 text-white rounded">Execute</button>
-  </div>
-  <div>
-    <h2 class="text-xl font-semibold">Current Directory:</h2>
-    <pre class="bg-gray-100 p-2 rounded">{{ currentDirectory }}</pre>
-  </div>
-  <div>
-    <h2 class="text-xl font-semibold">Output:</h2>
-    <pre class="bg-gray-100 p-2 rounded">{{ output }}</pre>
-  </div>
-  <div class="mt-4">
-    <h2 class="text-xl font-semibold text-red-500">Error:</h2>
-    <pre class="bg-red-100 p-2 rounded">{{ error }}</pre>
-  </div>
- -->
+
 
 <div class="container mx-auto p-4">
   <h1 class="text-2xl font-bold mb-4">Console Executor</h1>
