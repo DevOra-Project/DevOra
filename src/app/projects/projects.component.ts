@@ -52,9 +52,29 @@ export class ProjectsComponent {
       this.projectColorChange(project)
     });
 
-    
   }
-
+  getLanguageColor(language: string): string {
+    switch (language) {
+      case 'Angular':
+        return 'bg-red-500'; // Rojo para Angular
+      case 'HTML':
+        return 'bg-orange-500'; // Naranja para HTML
+      case 'CSS':
+        return 'bg-blue-500'; // Azul para CSS
+      case 'Node.js':
+        return 'bg-green-500'; // Verde para Node.js
+      case 'Spring Boot':
+        return 'bg-teal-600'; // Teal para Spring Boot
+      case 'TypeScript':
+        return 'bg-blue-400'; // Azul claro para TypeScript
+      case 'Vue':
+        return 'bg-green-400'; // Verde claro para Vue
+      case 'C#':
+        return 'bg-purple-600'; // Morado para C#
+      default:
+        return 'bg-gray-400'; // Gris para lenguajes desconocidos
+    }
+  }
   projectColorChange(project:Project){
       if (project.language) {
         project.languageColor = this.languageColorService.getColor(project.language);
@@ -101,32 +121,50 @@ export class ProjectsComponent {
   }
 
   createProject(): void {
-    if(this.newProject.localPath==null||this.newProject.localPath==null||this.newProject.localPath==undefined){
-      this.toastr.warning("Please select a local path")
-      this.newProject.localPath =" "
+    this.toastr.clear();
+    
+    if (this.newProject.localPath == null || this.newProject.localPath == undefined) {
+      this.toastr.warning("Please asign later a local path");
+      this.newProject.localPath = " ";
     }
-    this.projectService.createProject(this.newProject).subscribe((res: any) => {
-      console.log(res);
-      this.projects.push(res); // Agrega el nuevo proyecto a la lista
+  
+    if (this.newProject.description !== "" && this.newProject.description != null && 
+        this.newProject.name !== "" && this.newProject.name != null) {
       
-      // Crear asignación de usuario a proyecto
-      const userId = this.cookiesService.getToken('user_id'); // Obtén el user_id del token
-      const userProject = new UserProject(parseInt(this.cookiesService.getToken('user_id')), res.id,res.localPath);
-
-      console.log(userProject)
-      this.userProjectService.createUserProject(userProject).subscribe(
-        (upRes: any) => {
-        console.log("Asignación creada:", upRes);
-        this.toastr.success("Asignación creada:", upRes);
-        this.cdr.detectChanges(); // Fuerza la detección de cambios
-        (error:any)=>{
-          console.log(error);
+      this.projectService.createProject(this.newProject).subscribe(
+        (res: any) => {
+          console.log(res);
+          this.projects.push(res); // Agrega el nuevo proyecto a la lista
+  
+          // Introduce un retraso antes de crear la asignación de usuario
+          setTimeout(() => {
+            const userId = this.cookiesService.getToken('user_id');
+            const userProject = new UserProject(parseInt(userId), res.id, res.localPath);
+  
+            console.log(userProject);
+            this.userProjectService.createUserProject(userProject).subscribe(
+              (upRes: any) => {
+                console.log("Asignación creada:", upRes);
+                this.toastr.success("Asignación creada:", upRes);
+                this.cdr.detectChanges();
+              },
+              (error: any) => {
+                console.log(error);
+              }
+            );
+          }, 2000); // Retraso de 2 segundos antes de ejecutar el createUserProject
+        },
+        (error: any) => {
+          this.toastr.error("Ocurrió un error al crear el proyecto");
         }
-      });
-    });
-    this.closeNewProjectModal(); // Cierra el modal
+      );
+      
+      this.closeNewProjectModal(); // Cierra el modal
+    } else {
+      this.toastr.warning("Complete correctamente los campos");
+    }
   }
-
+  
 
   closeNewProjectModal(): void {
     this.newProject = undefined // Reinicia el proyecto al cerrar

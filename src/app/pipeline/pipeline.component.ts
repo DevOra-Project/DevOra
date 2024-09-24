@@ -11,6 +11,7 @@ import { StepService } from '../utilities/services/step.service';
 import { Task } from 'electron';
 import { TaskService } from '../utilities/services/task.service';
 import { ProjectTask } from '../utilities/models/projectTask';
+import { CookiesService } from '../utilities/services/cookies.service';
 
 @Component({
   selector: 'app-pipeline',
@@ -30,7 +31,8 @@ export class PipelineComponent implements OnInit{
     private route:ActivatedRoute,
     private commentaryService: CommentaryService,
     private stepService: StepService,
-    private taskService: TaskService
+    private taskService: TaskService,
+    private cookiesService: CookiesService
   ) {
 
     (window as any).electronAPI.onSelectFolderResponse((event: any, folderPath: string) => {
@@ -59,7 +61,7 @@ export class PipelineComponent implements OnInit{
   stepOnConfig: Step = new Step('', '', ''); // Step seleccionado para editar (vacío inicialmente)
   //Comments
   comments: Commentary[] = [
-    // Comentarios para el pipeline "Creación del Proyecto"
+  /*   // Comentarios para el pipeline "Creación del Proyecto"
     { pipelineId: 1, user: 'Alice', message: 'He creado el proyecto inicial utilizando el comando `ng new my-app`. Todo parece estar configurado correctamente.', timestamp: new Date() },
     { pipelineId: 1, user: 'Bob', message: 'Verifiqué la estructura del proyecto y todo se ve bien. ¿Alguien tiene alguna sugerencia para los módulos iniciales?', timestamp: new Date() },
     { pipelineId: 1, user: 'Charlie', message: 'Asegúrense de que el archivo `angular.json` esté configurado para nuestro entorno de desarrollo.', timestamp: new Date() },
@@ -81,9 +83,10 @@ export class PipelineComponent implements OnInit{
     { pipelineId: 4, user: 'Mia', message: 'El despliegue fue exitoso. Revisen el sitio en producción y confirmen que todo está funcionando.', timestamp: new Date() },
     { pipelineId: 4, user: 'Nina', message: 'Encontré un problema menor después del despliegue. Voy a arreglarlo y redeploy.', timestamp: new Date() },
     { pipelineId: 4, user: 'Oscar', message: 'El sitio en producción está funcionando correctamente. Buen trabajo, equipo!', timestamp: new Date() },
-    { pipelineId: 4, user: 'Paula', message: 'Revisé el despliegue y todo se ve bien. Podemos proceder con las próximas características.', timestamp: new Date() },
+    { pipelineId: 4, user: 'Paula', message: 'Revisé el despliegue y todo se ve bien. Podemos proceder con las próximas características.', timestamp: new Date() }, */
   ];
-  
+  currentUserId :number|any  ;
+
   currentStep: Step | null = null;
   newCommand: string = '';
 
@@ -123,6 +126,7 @@ export class PipelineComponent implements OnInit{
         this.taskService.getProjectTask(taskId).subscribe(
           (response:ProjectTask)=>{
             this.actualTask = response
+            this.currentUserId = parseInt(this.cookiesService.getToken("user_id"))
             },
           error =>{
             this.toastr.error('Error al traer task')
@@ -248,7 +252,7 @@ export class PipelineComponent implements OnInit{
         }
       );
   }
-  addComment(pipelineId: number) {
+/*   addComment(pipelineId: number) {
     if (this.newComment.trim()) {
       const newComment: Commentary = {
         id: this.comments.length + 1,
@@ -261,22 +265,54 @@ export class PipelineComponent implements OnInit{
       this.comments.push(newComment);
       this.newComment = '';
     }
+  } */
+   // Función para añadir comentario
+  addComment(pipelineId: number) {
+    if (this.newComment.trim()) {
+      const newCommentary = new Commentary(
+   
+        'Current User', // Aquí puedes usar el nombre de usuario o el objeto User si tienes más información
+        this.newComment, // El mensaje del comentario
+        new Date(), // Fecha actual
+        pipelineId,
+        this.currentUserId // El ID del usuario actual
+      );
+
+      this.commentaryService.createCommentary(newCommentary).subscribe(
+        (commentary: Commentary) => {
+          this.toastr.success('Comentario añadido exitosamente');
+          this.filteredComments.push(commentary); // Añadir el comentario a la lista local
+          this.newComment = ''; // Limpiar el campo de comentario
+        },
+        (error) => {
+          console.error('Error al añadir el comentario:', error);
+          this.toastr.error('Error al añadir el comentario');
+        }
+      );
+    }
   }
-  filterComments() {
+/*   filterComments() {
     if (this.selectedPipeline) {
-      this.filteredComments = this.comments.filter(c => c.pipelineId === this.selectedPipeline!.id);
+      this.filteredComments = this.comments.filter(c => c.stepId === this.selectedPipeline!.id);
     } else {
       this.filteredComments = [];
     }
+  }
+ */
+  getCommentariesByStepid(pipeline: Step){
+    this.commentaryService.getCommentariesByStep(pipeline.id!).subscribe((res:any)=>{
+      this.filteredComments = res;
+    })
   }
 
   closeDiscussion(){
     this.selectedPipeline = null;
   }
 
+
   selectPipeline(pipeline: Step) {
     this.selectedPipeline = pipeline;
-    this.filterComments();
+    this.getCommentariesByStepid(pipeline);
     //this.getCommentaries(pipeline);
     console.log(pipeline)
   }

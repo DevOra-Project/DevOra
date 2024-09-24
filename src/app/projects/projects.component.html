@@ -18,9 +18,10 @@
       <h2 class="text-xl font-semibold">{{ project.name }}</h2>
       <p>{{ project.description }}</p>
       <span *ngIf="project.language"
-            [ngClass]="'bg-' + project.languageColor + ' text-white text-xs px-2 py-1 rounded-full mt-2 inline-block'">
+        [ngClass]="getLanguageColor(project.language) + ' text-white text-xs px-2 py-1 rounded-full mt-2 inline-block'">
         {{ project.language }}
       </span>
+
         <!--<span *ngIf="project.language"
             [ngClass]="'bg-gre + ' text-white text-xs px-2 py-1 rounded-full mt-2 inline-block'">
         {{ project.language }}
@@ -57,10 +58,10 @@
         <option value="C#">C#</option>
       </select>
     </div>
-    <div class="mb-4">
+<!--     <div class="mb-4">
       <label class="block text-sm font-medium text-gray-700">local path</label>
       <input [(ngModel)]="newProject.localPath" class="w-full px-3 py-2 border rounded-md" type="text" placeholder="Nombre del proyecto">
-    </div>
+    </div> -->
     <button (click)="createProject()" class="bg-blue-500 text-white px-4 py-2 rounded-md">Crear Proyecto</button>
     <button (click)="closeNewProjectModal()" class="ml-2 text-gray-600 hover:text-gray-800" >Cancelar</button>
   </div>

@@ -26,7 +26,7 @@ export const routes: Routes = [
     { path: "projects", component: ProjectsComponent },
     { path: "file-explorer", component: FileExplorerComponent },
     { path: "backup-manager", component: BackupManagerComponent },
-
+    { path: "role", component: RoleFormComponent },
     //PATHS compuestos:
 
     { path: 'pipeline/:taskId', component: PipelineComponent },

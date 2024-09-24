@@ -17,5 +17,8 @@ export class CommentaryService {
     return this.http.get<Commentary[]>(`${this.apiUrl}/steps/${stepId}/commentaries`);
   }
 
-  
+  // Método para crear un comentario
+  createCommentary(commentary: Commentary): Observable<Commentary> {
+    return this.http.post<Commentary>(`${this.apiUrl}/commentaries`, commentary);
+  }
 }
