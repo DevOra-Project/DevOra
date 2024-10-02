@@ -35,15 +35,7 @@ export class PipelineComponent implements OnInit{
     private cookiesService: CookiesService
   ) {
 
-    (window as any).electronAPI.onSelectFolderResponse((event: any, folderPath: string) => {
-      if (folderPath) {
-        this.currentDirectory = folderPath;
-        console.log('Carpeta seleccionada:', folderPath);
-        console.log('Carpeta actualizada:', this.currentDirectory);
-      } else {
-        console.error('Selección de carpeta cancelada');
-      }
-    });
+    
 
   }
 
@@ -62,29 +54,7 @@ export class PipelineComponent implements OnInit{
   stepOnConfig: Step = new Step('', '', ''); // Step seleccionado para editar (vacío inicialmente)
   //Comments
   comments: Commentary[] = [
-  /*   // Comentarios para el pipeline "Creación del Proyecto"
-    { pipelineId: 1, user: 'Alice', message: 'He creado el proyecto inicial utilizando el comando `ng new my-app`. Todo parece estar configurado correctamente.', timestamp: new Date() },
-    { pipelineId: 1, user: 'Bob', message: 'Verifiqué la estructura del proyecto y todo se ve bien. ¿Alguien tiene alguna sugerencia para los módulos iniciales?', timestamp: new Date() },
-    { pipelineId: 1, user: 'Charlie', message: 'Asegúrense de que el archivo `angular.json` esté configurado para nuestro entorno de desarrollo.', timestamp: new Date() },
-  
-    // Comentarios para el pipeline "Desarrollo"
-    { pipelineId: 2, user: 'David', message: 'Estoy ejecutando `ng serve` para levantar el servidor de desarrollo. Todo funciona sin errores hasta ahora.', timestamp: new Date() },
-    { pipelineId: 2, user: 'Eve', message: 'He notado que algunos estilos no se están aplicando correctamente. Revisaré los archivos SCSS.', timestamp: new Date() },
-    { pipelineId: 2, user: 'Frank', message: 'He añadido un par de componentes básicos. Revisen el repositorio y denme feedback.', timestamp: new Date() },
-    { pipelineId: 2, user: 'Grace', message: 'El servidor de desarrollo está funcionando bien en mi máquina. Podemos proceder con la integración de más características.', timestamp: new Date() },
-  
-    // Comentarios para el pipeline "Producción"
-    { pipelineId: 3, user: 'Henry', message: 'He generado el build de producción con `ng build --prod`. El tamaño del bundle parece adecuado.', timestamp: new Date() },
-    { pipelineId: 3, user: 'Isabel', message: 'Revisé el build y todo parece estar optimizado. Necesitamos probarlo en un entorno staging.', timestamp: new Date() },
-    { pipelineId: 3, user: 'Jack', message: 'Encontré un pequeño bug en el entorno de producción. Lo arreglaré y volveré a generar el build.', timestamp: new Date() },
-    { pipelineId: 3, user: 'Karen', message: 'El build de producción se completó sin errores. Vamos a proceder con las pruebas finales.', timestamp: new Date() },
-  
-    // Comentarios para el pipeline "Despliegue"
-    { pipelineId: 4, user: 'Leo', message: 'He comenzado el proceso de despliegue utilizando `ng deploy`. La aplicación está subiendo al servidor.', timestamp: new Date() },
-    { pipelineId: 4, user: 'Mia', message: 'El despliegue fue exitoso. Revisen el sitio en producción y confirmen que todo está funcionando.', timestamp: new Date() },
-    { pipelineId: 4, user: 'Nina', message: 'Encontré un problema menor después del despliegue. Voy a arreglarlo y redeploy.', timestamp: new Date() },
-    { pipelineId: 4, user: 'Oscar', message: 'El sitio en producción está funcionando correctamente. Buen trabajo, equipo!', timestamp: new Date() },
-    { pipelineId: 4, user: 'Paula', message: 'Revisé el despliegue y todo se ve bien. Podemos proceder con las próximas características.', timestamp: new Date() }, */
+
   ];
   currentUserId :number|any  ;
 
@@ -138,6 +108,17 @@ export class PipelineComponent implements OnInit{
         //this.loadAllTasks();
       }
     });
+
+    (window as any).electronAPI.onSelectFolderResponse((event: any, folderPath: string) => {
+      if (folderPath) {
+        this.currentDirectory = folderPath;
+        console.log('Carpeta seleccionada:', folderPath);
+        console.log('Carpeta actualizada:', this.currentDirectory);
+      } else {
+        console.error('Selección de carpeta cancelada');
+      }
+    });
+
   }
 
   loadAllSteps(){

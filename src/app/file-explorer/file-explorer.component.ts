@@ -24,6 +24,11 @@ export class FileExplorerComponent implements OnInit {
   devoraComments: string[] = [];  // Aquí se almacenarán los comentarios con el tag devora
 
   constructor(private cdr: ChangeDetectorRef) { 
+  
+  }
+
+  ngOnInit(): void {
+    // Inicialmente no leeremos ningún directorio
     (window as any).electronAPI.onSelectFolderResponse((event: any, folderPath: string) => {
       if (folderPath) {
         this.inputPath = folderPath;
@@ -35,10 +40,6 @@ export class FileExplorerComponent implements OnInit {
         console.error('Selección de carpeta cancelada');
       }
     });
-  }
-
-  ngOnInit(): void {
-    // Inicialmente no leeremos ningún directorio
   }
   openDirectory(){
     console.log('entra');
