@@ -1,17 +1,20 @@
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
-import { Router, RouterOutlet } from '@angular/router';
+import { Router, RouterModule, RouterOutlet } from '@angular/router';
 import { initFlowbite } from 'flowbite';
 import { IconsComponent } from './icons/icons.component';
 import { routes } from '../app.routes';
 import { Subscription } from 'rxjs';
 import { SidebarService } from '../utilities/services/sidebar.service';
 import { AuthService } from '../utilities/services/auth.service';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-sidebar',
   standalone: true,
   imports: [
+    RouterModule,
+    FormsModule,
     CommonModule,
     RouterOutlet, 
   

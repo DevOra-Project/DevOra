@@ -19,4 +19,5 @@ contextBridge.exposeInMainWorld('electronAPI', {
    /*  openTerminal: (command) => ipcRenderer.invoke('open-terminal', command),
     onTerminalResponse: (callback) => ipcRenderer.on('terminal-response', (event, data) => callback(data))
  */
+
 });

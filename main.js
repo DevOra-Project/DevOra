@@ -16,34 +16,43 @@ function createWindow () {
     width: 1400,
     height: 800,
     webPreferences: {
-      nodeIntegration: true,
-      preload: path.join(__dirname, 'preload.js')
+      nodeIntegration: true, // Permite el uso de Node.js en el renderizador
+      contextIsolation: false, // Desactiva el aislamiento de contexto para permitir el acceso a Node.js APIs
+      enableRemoteModule: true, // Habilita el módulo remoto si necesitas usarlo
+    preload: path.join(__dirname, 'preload.js')
     }
   })
   mainWindow.loadURL(
     url.format({
-/*       pathname: path.join(__dirname, `/dist/dev-ora/browser/index.html`),
+      pathname: path.join(__dirname, `/dist/dev-ora/browser/index.html`),
       protocol: "file:",
-      slashes: true */
-      pathname: 'localhost:4200',
-      protocol: "http:",
       slashes: true
-
-
+      // pathname: 'localhost:4200',
+      // protocol: "http:",
+      // slashes: true
     })
   );
+
   mainWindow.webContents.openDevTools()
   mainWindow.on('closed', function () {
     mainWindow = null
   })
+
+
 }
 app.on('ready', createWindow)
+app.on('activate', () => {
+  if (BrowserWindow.getAllWindows().length === 0) {
+    createWindow()
+  }
+})
 app.on('window-all-closed', function () {
   if (process.platform !== 'darwin') app.quit()
 })
-app.on('activate', function () {
-  if (mainWindow === null) createWindow()
-})
+// app.on('activate', function () {
+//   if (mainWindow === null) createWindow()
+// })
+
 
 
 ///////////////////////COMUNICATION LOGIC:
@@ -148,25 +157,4 @@ ipcMain.handle('execute-command', async (event, command) => {
   });
 });
 
-/* ipcMain.handle('open-terminal', (event, command, directory) => {
-  let terminalCommand;
 
-  if (process.platform === 'win32') {
-    terminalCommand = `start cmd.exe /K "cd /d ${directory} && ${command}"`;
-  } else if (process.platform === 'darwin') {
-    terminalCommand = `open -a Terminal ${directory} && ${command}`;
-  } else {
-    terminalCommand = `x-terminal-emulator -e "cd ${directory} && ${command}"`;
-  }
-
-  exec(terminalCommand, { cwd: directory }, (error, stdout, stderr) => {
-    if (error) {
-      console.error(`Error: ${stderr}`);
-      event.reply('terminal-response', `Error: ${stderr}`);
-    } else {
-      console.log(`Output: ${stdout}`);
-      event.reply('terminal-response', `Output: ${stdout}`);
-    }
-  });
-});
- */

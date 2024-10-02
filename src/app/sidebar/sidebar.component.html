@@ -2,7 +2,7 @@
   <ul class="space-y-4">
       <li *ngFor="let item of items" class="flex items-center p-2 hover:bg-zinc-800 rounded-md" >
         <div class="w-full flex">
-          <a class="w-full flex" [href]="item.link">
+          <a class="w-full flex" [routerLink]="item.link">
             <app-icons [icon]="item.icon"></app-icons>
             <span class="ml-3 text-zinc-400">{{ item.label }}</span>
           </a>

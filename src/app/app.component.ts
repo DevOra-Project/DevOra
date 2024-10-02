@@ -9,6 +9,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { Subscription } from 'rxjs';
 import { AuthService } from './utilities/services/auth.service';
 import { SidebarService } from './utilities/services/sidebar.service';
+import { CookiesService } from './utilities/services/cookies.service';
 
 @Component({
   selector: 'app-root',
@@ -35,7 +36,8 @@ export class AppComponent implements OnInit{
   constructor(@Inject(PLATFORM_ID) private platformId: Object,
   private router: Router,
   private sidebarService: SidebarService,
-  private authService: AuthService){
+  private authService: AuthService,
+  private cookiesService: CookiesService){
     this.sidebarService.sidebarVisible$.subscribe(
       (isVisible) => {
         this.sidebarVisible = isVisible;
@@ -64,6 +66,15 @@ export class AppComponent implements OnInit{
     this.sidebarSubscription = this.sidebarService.sidebarVisible$.subscribe((isVisible) => {
       this.sidebarVisible = isVisible;
     });
+
+  // Prueba a establecer y recuperar un valor de cookies
+  this.cookiesService.setToken('test_cookie', 'test_value');
+  const cookieValue = this.cookiesService.getToken('test_cookie');
+  console.log('Valor de la cookie:', cookieValue); // Debería mostrar 'test_value'
+
+
+
+
   }
   ngOnDestroy(): void {
     this.sidebarSubscription.unsubscribe();
