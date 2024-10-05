@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../utilities/services/auth.service';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { CookiesService } from '../utilities/services/cookies.service';
 import { ToastrService } from 'ngx-toastr';
 import { UserService } from '../utilities/services/user.service';
@@ -12,6 +12,7 @@ import { User } from '../utilities/models/user';
   selector: 'app-login',
   standalone: true,
   imports: [
+    RouterModule,
     CommonModule,
     FormsModule
   ],
@@ -56,4 +57,7 @@ export class LoginComponent {
     console.log( this.cookiesService.getToken("user_role"))
   }
 
+  toRegister(){
+   /*  this.authService.onRegistering() */
+  }
 }

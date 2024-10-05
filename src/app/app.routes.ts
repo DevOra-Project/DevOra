@@ -12,21 +12,22 @@ import { NotificationsComponent } from './notifications/notifications.component'
 import { ProjectsComponent } from './projects/projects.component';
 import { FileExplorerComponent } from './file-explorer/file-explorer.component';
 import { BackupManagerComponent } from './backup-manager/backup-manager.component';
+import { authGuard } from './utilities/guard/auth.guard';
 
 export const routes: Routes = [
-  
-    { path: "profile", component: ProfileComponent },
-    { path: "dashboard", component: DashboardComponent },
-    { path: "create-user", component: UserFormComponent },
-    { path: "edit-user", component: UserEditComponent },
-    { path: "login", component: LoginComponent },
-    { path: "github", component: GithubIntegrationComponent },
-    { path: "pipeline", component: PipelineComponent },
-    { path: "notifications", component: NotificationsComponent },
-    { path: "projects", component: ProjectsComponent },
-    { path: "file-explorer", component: FileExplorerComponent },
-    { path: "backup-manager", component: BackupManagerComponent },
-    { path: "role", component: RoleFormComponent },
+
+    { path: "profile", component: ProfileComponent , canActivate: [authGuard] },
+    { path: "dashboard", component: DashboardComponent,  canActivate: [authGuard] },
+    { path: 'register', component: UserFormComponent  },
+    { path: "edit-user", component: UserEditComponent , canActivate: [authGuard] },
+    { path: "login", component: LoginComponent  },
+    { path: "github", component: GithubIntegrationComponent , canActivate: [authGuard] },
+    { path: "pipeline", component: PipelineComponent , canActivate: [authGuard] },
+    { path: "notifications", component: NotificationsComponent , canActivate: [authGuard] },
+    { path: "projects", component: ProjectsComponent , canActivate: [authGuard] },
+    { path: "file-explorer", component: FileExplorerComponent , canActivate: [authGuard] },
+    { path: "backup-manager", component: BackupManagerComponent , canActivate: [authGuard] },
+    { path: "role", component: RoleFormComponent , canActivate: [authGuard] },
     //PATHS compuestos:
 
     { path: 'pipeline/:taskId', component: PipelineComponent },

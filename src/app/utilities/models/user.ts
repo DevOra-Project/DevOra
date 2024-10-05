@@ -7,7 +7,7 @@ export class User {
         public name: string,
 
         public email: string,
-      
+
         public profileImage: string,
         public description: string,
         public posts: number,
@@ -18,6 +18,7 @@ export class User {
         public statistics: any,
         public projectsProgress: ProjectProgress[],
 
+        public role?:string,
         public username?:string,
         public password?:string,
         public position?: string,

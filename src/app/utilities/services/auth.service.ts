@@ -30,6 +30,7 @@ export class AuthService {
     return this.cookieService.checkToken('user_id'); 
   }
 
+
   getUserRole(){
     const token = this.cookieService.getToken('user_role');
     console.log("userrole",token,this.cookieService.getToken('user_role'))

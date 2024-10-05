@@ -1,15 +1,18 @@
 <div class="container mx-auto p-6 bg-gray-900 text-white rounded-lg shadow-md max-w-md">
-    <h2 class="text-2xl font-semibold mb-4">Iniciar Sesión</h2>
-    <div >
-      <div class="mb-4">
-        <label class="block text-sm font-medium mb-1" for="usernameOrEmail">Nombre de Usuario o Correo</label>
-        <input type="text" id="usernameOrEmail" [(ngModel)]="loginData.usernameOrEmail" name="usernameOrEmail" class="w-full p-2 bg-gray-800 rounded" (keyup.enter)="onSubmit()" required>
-      </div>
-      <div class="mb-4">
-        <label class="block text-sm font-medium mb-1" for="password">Contraseña</label>
-        <input type="password" id="password" [(ngModel)]="loginData.password" name="password" class="w-full p-2 bg-gray-800 rounded" (keyup.enter)="onSubmit()" required>
-      </div>
-      <button type="submit" class="w-full bg-blue-600 p-2 rounded" (click)="onSubmit()">Ingresar</button>
+  <h2 class="text-2xl font-semibold mb-4">Iniciar Sesión</h2>
+  <div>
+    <div class="mb-4">
+      <label class="block text-sm font-medium mb-1" for="usernameOrEmail">Nombre de Usuario o Correo</label>
+      <input type="text" id="usernameOrEmail" [(ngModel)]="loginData.usernameOrEmail" name="usernameOrEmail" class="w-full p-2 bg-gray-800 rounded" (keyup.enter)="onSubmit()" required>
+    </div>
+    <div class="mb-4">
+      <label class="block text-sm font-medium mb-1" for="password">Contraseña</label>
+      <input type="password" id="password" [(ngModel)]="loginData.password" name="password" class="w-full p-2 bg-gray-800 rounded" (keyup.enter)="onSubmit()" required>
+    </div>
+    <button type="submit" class="w-full bg-blue-600 p-2 rounded" (click)="onSubmit()">Ingresar</button>
+
+    <div class="mt-4 text-center">
+      <button routerLink="/register" class="text-sm text-blue-500 hover:underline" (click)="toRegister()">¿No tienes cuenta? Regístrate aquí</button>
     </div>
   </div>
-  
+</div>

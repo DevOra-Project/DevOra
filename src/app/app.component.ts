@@ -52,11 +52,18 @@ export class AppComponent implements OnInit{
     if (isPlatformBrowser(this.platformId)) {
       initFlowbite();
     }
-    if(this.authService.isAuthenticated()){
+    if(this.authService.isAuthenticated() && this.cookiesService.getToken('user_id')!= 'OnRegister'){
       //this.router.navigateByUrl("/evaluation");
+      console.log(this.cookiesService.getToken('user_id'))
     }else{
       this.router.navigateByUrl("/login");
     }
+
+  /* 
+    if(this.cookiesService.getToken('user_id') == 'OnRegister' ){
+      this.router.navigateByUrl("/register");
+    } */
+
   
     this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
@@ -69,11 +76,9 @@ export class AppComponent implements OnInit{
 
   // Prueba a establecer y recuperar un valor de cookies
   this.cookiesService.setToken('test_cookie', 'test_value');
+  console.log('Valor de la cookie user_id:',this.cookiesService.getToken('user_id'));
   const cookieValue = this.cookiesService.getToken('test_cookie');
   console.log('Valor de la cookie:', cookieValue); // Debería mostrar 'test_value'
-
-
-
 
   }
   ngOnDestroy(): void {

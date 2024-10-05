@@ -6,11 +6,14 @@ import { UserService } from '../utilities/services/user.service';
 import { User } from '../utilities/models/user';
 import { CookiesService } from '../utilities/services/cookies.service';
 import { FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-header',
   standalone: true,
   imports: [
+    FormsModule,
+    RouterModule,
     CommonModule,
     FormsModule
   ],
