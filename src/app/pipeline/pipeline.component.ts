@@ -12,6 +12,8 @@ import { Task } from 'electron';
 import { TaskService } from '../utilities/services/task.service';
 import { ProjectTask } from '../utilities/models/projectTask';
 import { CookiesService } from '../utilities/services/cookies.service';
+import { NotificationService } from '../utilities/services/notifications.service';
+import { Notification } from '../utilities/models/notification';
 
 @Component({
   selector: 'app-pipeline',
@@ -32,7 +34,9 @@ export class PipelineComponent implements OnInit{
     private commentaryService: CommentaryService,
     private stepService: StepService,
     private taskService: TaskService,
-    private cookiesService: CookiesService
+    private cookiesService: CookiesService,
+    private notificationService: NotificationService // Inyectar servicio de notificación
+
   ) {
 
     
@@ -89,6 +93,8 @@ export class PipelineComponent implements OnInit{
   }
 
   ngOnInit(): void {
+    this.currentUserId = parseInt(this.cookiesService.getToken("user_id"), 10);
+    // Cargar datos de inicialización
     this.getCurrentDirectory(); // Obtener el directorio actual al iniciar la aplicación
     this.route.paramMap.subscribe(params => {
       this.currenTaskId = params.get('taskId')!;
@@ -143,6 +149,26 @@ export class PipelineComponent implements OnInit{
     this.stepSettingsModalOpen = false; // Cerrar el modal
   }
 
+    // Función para crear una notificación
+  createNotification(message: string, type: string) {
+    const newNotification = new Notification(
+      null,
+      message,
+      new Date(),
+      false, // No visto
+      type,
+      this.currentUserId
+    );
+
+    this.notificationService.createNotification(newNotification).subscribe(
+      response => {
+        console.log('Notificación creada:', response);
+      },
+      error => {
+        console.error('Error al crear notificación:', error);
+      }
+    );
+  }
   saveChanges(stepConf:Step) {
     // Aquí implementarías la lógica para guardar los cambios del step seleccionado
     this.stepService.updateStep(stepConf.id!,stepConf).subscribe(
@@ -158,6 +184,7 @@ export class PipelineComponent implements OnInit{
     console.log('Guardando cambios:', this.stepOnConfig);
     this.closeModal(); // Cerrar el modal después de guardar
   }
+
 
 
 // Enviar el formulario para crear un nuevo step
@@ -176,11 +203,16 @@ export class PipelineComponent implements OnInit{
       this.newStep = new Step('','','')
       this.stepService.getStepsByTaskId(this.currenTaskId)
       this.closeModal();
+      this.createNotification('Step creado exitosamente', 'success'); // Crear notificación
     }, error => {
       this.toastr.error('Error al crear el step')
       console.error('Error al crear el step:', error);
+      this.createNotification('Error al crear el step', 'error'); // Crear notificación de error
     });
   }
+
+
+
 
   // Funciones para el modal de confirmación
   checkAndExecuteStep(step: Step) {

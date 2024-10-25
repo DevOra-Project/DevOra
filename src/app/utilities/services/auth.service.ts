@@ -26,6 +26,7 @@ export class AuthService {
 
   isAuthenticated(): boolean {
     console.log("gettok",this.cookieService.getToken("user_id"));
+    //console.log("gettok",token,this.cookieService.getTokenEl('user_role'))
 
     return this.cookieService.checkToken('user_id'); 
   }
@@ -34,6 +35,9 @@ export class AuthService {
   getUserRole(){
     const token = this.cookieService.getToken('user_role');
     console.log("userrole",token,this.cookieService.getToken('user_role'))
+    //console.log("userroleElect",token,this.cookieService.getTokenEl('user_role'))
+
+
     // if (!token) {
     //   return null;
     // }
@@ -45,5 +49,9 @@ export class AuthService {
 
   login(username: string, password: string): Observable<any> {
     return this.http.post<any>(this.baseUrl+'/login', { username, password });
+  }
+   // Función para obtener el historial de inicio de sesión
+  getLoginHistory(userId: number): Observable<any> {
+    return this.http.get(`${this.baseUrl}/users/${userId}/login-history`);
   }
 }

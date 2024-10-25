@@ -17,8 +17,8 @@ function createWindow () {
     height: 800,
     webPreferences: {
       nodeIntegration: true, // Permite el uso de Node.js en el renderizador
-      contextIsolation: false, // Desactiva el aislamiento de contexto para permitir el acceso a Node.js APIs
-      enableRemoteModule: true, // Habilita el módulo remoto si necesitas usarlo
+      contextIsolation: true, // Desactiva el aislamiento de contexto para permitir el acceso a Node.js APIs
+      enableRemoteModule: true, // Habilita el módulo remoto
     preload: path.join(__dirname, 'preload.js')
     }
   })
@@ -27,19 +27,31 @@ function createWindow () {
       pathname: path.join(__dirname, `/dist/dev-ora/browser/index.html`),
       protocol: "file:",
       slashes: true
-      // pathname: 'localhost:4200',
-      // protocol: "http:",
-      // slashes: true
+      /*   pathname: 'localhost:4200',
+        protocol: "http:",
+        slashes: true */
     })
   );
+    
+  let mainSession = mainWindow.webContents.session
 
-  mainWindow.webContents.openDevTools()
+    // Enviar un mensaje de log al proceso de renderizado
+
+
+
+    //ACTIVAR EL WEB TOOLS
+    /*   mainWindow.webContents.openDevTools() */
+
   mainWindow.on('closed', function () {
     mainWindow = null
   })
 
-
 }
+
+
+
+
+
 app.on('ready', createWindow)
 app.on('activate', () => {
   if (BrowserWindow.getAllWindows().length === 0) {
@@ -61,6 +73,60 @@ app.on('window-all-closed', function () {
   return fs.promises.readdir(dirPath, { withFileTypes: true });
 }); */
 
+
+// Función para establecer una cookie
+
+
+// Manejo de cookies
+/* ipcMain.handle('get-cookies', async () => {
+  const cookies = await session.defaultSession.cookies.get({});
+  return cookies;
+});
+
+ipcMain.on('set-cookie', async (event, cookie) => {
+  try {
+    await session.defaultSession.cookies.set(cookie);
+    console.log('Cookie set:', cookie);
+  } catch (error) {
+    console.error('Error setting cookie:', error);
+  }
+});
+
+ */
+
+ipcMain.on('set-cookie', (event, { name, value }) => {
+  const mainSession = event.sender.session;
+  mainSession.cookies.set({
+    url: 'https://myapp.com',
+    name: name,
+    value: value,
+    domain: 'myapp.com'
+  }).then(() => {
+    console.log(`Cookie ${name} set successfully`);
+  }).catch((error) => {
+    console.error('Error setting cookie:', error);
+  });
+});
+
+ipcMain.handle('get-cookie', async (event, name) => {
+  const mainSession = event.sender.session;
+  const cookies = await mainSession.cookies.get({ name });
+  return cookies.length > 0 ? cookies[0].value : '';
+});
+
+ipcMain.on('delete-cookie', (event, name) => {
+  const mainSession = event.sender.session;
+  mainSession.cookies.remove('https://myapp.com', name).then(() => {
+    console.log(`Cookie ${name} deleted successfully`);
+  }).catch((error) => {
+    console.error('Error deleting cookie:', error);
+  });
+});
+
+
+
+
+  /////////////////////
 
 
 ipcMain.handle('read-directory', async (event, dirPath) => {

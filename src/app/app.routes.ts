@@ -13,6 +13,7 @@ import { ProjectsComponent } from './projects/projects.component';
 import { FileExplorerComponent } from './file-explorer/file-explorer.component';
 import { BackupManagerComponent } from './backup-manager/backup-manager.component';
 import { authGuard } from './utilities/guard/auth.guard';
+import { LoginHistoryComponent } from './login-history/login-history.component';
 
 export const routes: Routes = [
 
@@ -28,6 +29,7 @@ export const routes: Routes = [
     { path: "file-explorer", component: FileExplorerComponent , canActivate: [authGuard] },
     { path: "backup-manager", component: BackupManagerComponent , canActivate: [authGuard] },
     { path: "role", component: RoleFormComponent , canActivate: [authGuard] },
+    { path: "login-history", component: LoginHistoryComponent , canActivate: [authGuard] },
     //PATHS compuestos:
 
     { path: 'pipeline/:taskId', component: PipelineComponent },

@@ -38,6 +38,7 @@ export class LoginComponent {
         response =>{ 
           console.log('Inicio de sesión exitoso:', response);
           this.toastr.success('Inicio de sesión exitoso')
+
           this.setTokens(response.user)
           this.router.navigateByUrl("/")
         },
@@ -52,9 +53,10 @@ export class LoginComponent {
   setTokens(user:User){
     console.log(user)
     this.cookiesService.setToken("user_id",user.id.toString());
+
     ////CAMBIAR AL HR ROLE
     this.cookiesService.setToken("user_role",user.position!);
-    console.log( this.cookiesService.getToken("user_role"))
+    //console.log( this.cookiesService.getTokenEl("user_role"))
   }
 
   toRegister(){

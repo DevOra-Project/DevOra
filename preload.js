@@ -1,5 +1,7 @@
 const { contextBridge, ipcRenderer } = require('electron');
 
+console.log('Preload script loaded');
+
 contextBridge.exposeInMainWorld('electronAPI', {
     readDirectory: (dirPath) => ipcRenderer.invoke('read-directory', dirPath),
     readFile: (filePath) => ipcRenderer.invoke('read-file', filePath),
@@ -16,8 +18,19 @@ contextBridge.exposeInMainWorld('electronAPI', {
     getCurrentDirectory: () => ipcRenderer.invoke('get-current-directory'),
     //EJECUTRAR COMANDOS:
     executeCommand: (command) => ipcRenderer.invoke('execute-command', command),
-   /*  openTerminal: (command) => ipcRenderer.invoke('open-terminal', command),
+    /*  openTerminal: (command) => ipcRenderer.invoke('open-terminal', command),
     onTerminalResponse: (callback) => ipcRenderer.on('terminal-response', (event, data) => callback(data))
  */
 
+    //cookies
+    /*   getCookies: () => ipcRenderer.invoke('get-cookies'),
+        setCookie: (cookie) => ipcRenderer.send('set-cookie', cookie),
+    */
+    setCookie: (name, value) => ipcRenderer.send('set-cookie', { name, value }),
+    getCookie: (name) => ipcRenderer.invoke('get-cookie', name),
+    deleteCookie: (name) => ipcRenderer.send('delete-cookie', name),
+
+
+    onLogMessage: (callback) => ipcRenderer.on('log-message', (event, message) => callback(message))
+    
 });

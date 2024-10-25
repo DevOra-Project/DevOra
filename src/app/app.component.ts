@@ -80,7 +80,17 @@ export class AppComponent implements OnInit{
   const cookieValue = this.cookiesService.getToken('test_cookie');
   console.log('Valor de la cookie:', cookieValue); // Debería mostrar 'test_value'
 
+
+  if ((window as any).electronAPI) {
+    (window as any).electronAPI.onLogMessage((message: string) => {
+      console.log('Message from main process:', message);
+    });
   }
+  
+}
+
+
+
   ngOnDestroy(): void {
     this.sidebarSubscription.unsubscribe();
   }
