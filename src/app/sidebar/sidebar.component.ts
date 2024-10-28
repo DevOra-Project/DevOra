@@ -37,6 +37,8 @@ export class SidebarComponent implements OnInit{
     { icon: 'settings', label: 'File explorer',link: 'file-explorer'},
     { icon: 'person', label: 'Profile',link: 'profile' },
     { icon: 'history', label: 'Login history',link: 'login-history' },
+    { icon: 'github', label: 'github',link: 'github' },
+    { icon: 'logout', label: 'Logout',link: 'logout'},
   ];
 
   constructor(

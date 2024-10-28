@@ -17,7 +17,7 @@ import { ToastrService } from 'ngx-toastr';
 export class GithubIntegrationComponent implements OnInit {
   user: any;
   repos: any[] =[];
-  token: string = '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';
+  token: string = 'ghp_hC4yvFCWIZ9FGmChiibJ3T';
   org: string = '';
   loggedIn: boolean = false;
 
