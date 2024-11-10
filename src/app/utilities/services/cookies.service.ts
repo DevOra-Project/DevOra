@@ -57,10 +57,12 @@ export class CookiesService {
   deleteToken(token_name: string) {
     if (this.isElectron()) {
       // En Electron eliminamos desde localStorage
+      this.cookies.delete(token_name);
       localStorage.removeItem(token_name);
     } else {
       // En el navegador usamos ngx-cookie-service
       this.cookies.delete(token_name);
+      localStorage.removeItem(token_name);
     }
   }
 /*   async getTokenEl(token_name: string): Promise<string> {

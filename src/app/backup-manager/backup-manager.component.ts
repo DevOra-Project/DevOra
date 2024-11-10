@@ -92,6 +92,7 @@ export class BackupManagerComponent implements OnInit {
   rollbackProject() {
     if (this.projectPath) {
       (window as any).electronAPI.rollbackProject(this.projectPath, this.backupVersion);
+
       this.showModal = false;
     } else {
       console.error('No se ha seleccionado una carpeta');

@@ -13,11 +13,9 @@ import { FormsModule } from '@angular/forms';
   selector: 'app-sidebar',
   standalone: true,
   imports: [
-    RouterModule,
-    FormsModule,
     CommonModule,
-    RouterOutlet, 
-  
+    FormsModule,
+    RouterModule,
     IconsComponent
   ],
   templateUrl: './sidebar.component.html',
@@ -38,7 +36,7 @@ export class SidebarComponent implements OnInit{
     { icon: 'person', label: 'Profile',link: 'profile' },
     { icon: 'history', label: 'Login history',link: 'login-history' },
     { icon: 'github', label: 'github',link: 'github' },
-    { icon: 'logout', label: 'Logout',link: 'logout'},
+  
   ];
 
   constructor(
